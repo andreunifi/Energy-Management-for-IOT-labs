@@ -51,6 +51,9 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# Results
+./lab1/dpm-simulator/results/*
+
 # debug information files
 *.dwo
 *:Zone.Identifier

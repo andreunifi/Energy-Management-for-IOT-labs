@@ -4,7 +4,7 @@ import time
 
 # Paths
 results_dir = "results/workload1"
-script_path = "./results_script.sh"
+script_path = "./results_script_nofile.sh"
 table_file = f"{results_dir}/summary_table.csv"
 
 # Ensure directory exists
