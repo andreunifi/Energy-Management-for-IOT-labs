@@ -1,0 +1,4 @@
+Higher timeout values lead to lower transitions.
+Timeout is the amount of time the psm machine stays in the "running" state. Consecutive workloads item, having starting time inside the timeout value,
+force the psm to stay in the run state and now go to idle.
+Lower timeout values in turns force higher transitions: as soon as the workload item is done, psm switches to idle mode (t=0) and is woken when a new workload is detected.
