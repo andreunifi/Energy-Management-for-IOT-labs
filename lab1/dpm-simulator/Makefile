@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS = -Wall -g
 INCDIR = "."
 
-.PHONY: default clean docs
+.PHONY: default clean docs idle sleep
 
 default: $(TARGET)
 
@@ -15,7 +15,13 @@ HEADERS = $(wildcard $(INCDIR)/*.h)
 	$(CC) $(CFLAGS) -I$(INCDIR) -c $< -o $@
 
 $(TARGET): $(OBJECTS) $(TARGET).o
-	$(CC) $(TARGET).o $(OBJECTS) $(CFLAGS) -I$(INCDIR) -o $@
+	$(CC) $(TARGET).o $(OBJECTS) $(CFLAGS) -I$(INCDIR) -o $@ -DIDLE
+
+idle:
+	$(MAKE) CFLAGS="$(CFLAGS) -DIDLE" clean $(TARGET)
+
+sleep:
+	$(MAKE) CFLAGS="$(CFLAGS) -DSLEEP" clean $(TARGET)
 
 docs: Doxyfile $(HEADERS) $(wildcard src/*.c)
 	doxygen $<

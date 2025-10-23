@@ -12,9 +12,12 @@ from analyze_psm import Tbe_data
 # Get workload num from user
 parser = argparse.ArgumentParser(description="Run DPM simulations and create a summary table")
 parser.add_argument("--workload", type=int, default=1, choices=[1, 2],
-                    help="Workload number to run (1 or 2)")
+                    help="workload to run (1 or 2)")
+parser.add_argument("--timeoutpolicy", type=str, default="I", choices=["I", "S"],
+                    help="Timeout policy to run (I or S)")
 args = parser.parse_args()
 wl_num = str(args.workload)
+to_pol = str(args.timeoutpolicy)
 
 simulator_script    = f"./results_script_nofile.sh"
 result_dir          = f"./results/workload{wl_num}"
@@ -29,6 +32,14 @@ tmp = Tbe_data()
 R2I_Tbe = tmp[0]    # Run 2 Idle BE
 R2S_Tbe = tmp[1]    # Run 2 Sleep BE (Useless at the moment)
 
+if(to_pol == "I"):
+    TimeOut = R2I_Tbe
+elif(to_pol == "S"):
+    TimeOut = R2S_Tbe
+
+
+print("Selected TimeOut policy: ", to_pol)
+
 # Setting different Timeouts based on BreakEven Time and results obtained
 exit_cond = 0
 i = 0
@@ -39,7 +50,7 @@ with open(result_filename, "w") as result_table:
 
     while exit_cond != 1:
         result = subprocess.run(
-            ["bash", simulator_script, wl_num, str(R2I_Tbe * i)],
+            ["bash", simulator_script, wl_num, str(TimeOut * i)],
             capture_output=True,
             text=True,
             check=True
@@ -47,8 +58,8 @@ with open(result_filename, "w") as result_table:
         lines = [line.strip() for line in result.stdout.splitlines() if line.strip()]
         transition_num  = int(lines[0])
         energy_cons     = float(lines[1])
-        print("timeout: %10.2f, transition num: %5d, energy consumption: %5.5f" % (R2I_Tbe * i, transition_num, energy_cons)) 
-        result_table.write(f"{R2I_Tbe*i}, {transition_num}, {energy_cons}\n")
+        print("timeout: %10.2f, transition num: %5d, energy consumption: %5.5f" % (TimeOut * i, transition_num, energy_cons)) 
+        result_table.write(f"{TimeOut*i}, {transition_num}, {energy_cons}\n")
         result_table.flush()
 
         

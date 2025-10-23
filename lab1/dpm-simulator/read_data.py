@@ -42,6 +42,3 @@ plt.grid(True, which="both", ls="--", linewidth=0.5)
 plt.legend()
 plt.tight_layout()
 plt.show()
-
-print(f"\n=== Summary Statistics for Workload {workload_num} ===")
-print(df.describe())
