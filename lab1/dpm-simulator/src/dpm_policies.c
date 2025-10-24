@@ -114,6 +114,12 @@ int dpm_simulate(psm_t psm, dpm_policy_t sel_policy, dpm_timeout_params
     }
     free(work_queue);
 
+    printf("[psm] k0 = %2.1f\n", hparams.alpha[0]);
+    printf("[psm] k1 = %2.1f\n", hparams.alpha[1]);
+    printf("[psm] k2 = %2.1f\n", hparams.alpha[2]);
+    printf("[psm] k3 = %2.1f\n", hparams.alpha[3]);
+    printf("[psm] k4 = %2.1f\n", hparams.alpha[4]);
+
     printf("[sim] Active time in profile = %.6lfs \n", t_active_ideal * PSM_TIME_UNIT);
     printf("[sim] Inactive time in profile = %.6lfs\n", t_inactive_ideal * PSM_TIME_UNIT);
     printf("[sim] Tot. Time w/o DPM = %.6lfs, Tot. Time w DPM = %.6lfs\n",
@@ -136,6 +142,16 @@ int dpm_decide_state(psm_state_t *next_state, psm_state_t prev_state, psm_time_t
         psm_time_t t_inactive_start, psm_time_t *history, dpm_policy_t policy,
         dpm_timeout_params tparams, dpm_history_params hparams)
 {
+    psm_time_t predicted_time;      // For History model
+    // dpm_history_params.alpha for coefficients
+    // dpm_history_params.threshold for thresholds
+    // history[i] for older time
+    if (policy == DPM_HISTORY){
+
+        predicted_time = hparams.alpha[0];
+        for (int i = 1; i < DPM_HIST_WIND_SIZE; i++)
+            predicted_time += hparams.alpha[i] * history[DPM_HIST_WIND_SIZE-i];  
+    }
     switch (policy) {
 
         case DPM_TIMEOUT:
@@ -154,7 +170,18 @@ int dpm_decide_state(psm_state_t *next_state, psm_state_t prev_state, psm_time_t
 
         case DPM_HISTORY:
             /* Day 3: EDIT */
-            *next_state = PSM_STATE_RUN;
+            
+            //typedef struct {
+            //    double alpha[DPM_HIST_WIND_SIZE]; /**< regression model coefficients */
+            //    psm_time_t threshold[DPM_N_THRESHOLDS]; /**< thresholds on the predicted time that trigger a state transition */
+            //} dpm_history_params;
+            
+            if(predicted_time > hparams.threshold[1]) // Timeout for SLEEP (5 is T_be)
+                *next_state = PSM_STATE_SLEEP;
+            else if(predicted_time > hparams.threshold[0]) // Timeout for IDLE (0.8 is T_be)
+                *next_state = PSM_STATE_IDLE;
+            else
+                *next_state = PSM_STATE_RUN;
             break;
 
         default:
