@@ -1,4 +1,5 @@
 #include "inc/dpm_policies.h"
+#include <stdio.h>
 
 int dpm_simulate(psm_t psm, dpm_policy_t sel_policy, dpm_timeout_params
 		tparams, dpm_history_params hparams, char* fwl)
@@ -147,10 +148,17 @@ int dpm_decide_state(psm_state_t *next_state, psm_state_t prev_state, psm_time_t
     // dpm_history_params.threshold for thresholds
     // history[i] for older time
     if (policy == DPM_HISTORY){
-
+    // k0=1.300, k1=0.450, k2=3.000, k3=4.500, k4=3.000
         predicted_time = hparams.alpha[0];
-        for (int i = 1; i < DPM_HIST_WIND_SIZE; i++)
-            predicted_time += hparams.alpha[i] * history[DPM_HIST_WIND_SIZE-i];  
+        
+        //for (int i = 1; i < DPM_HIST_WIND_SIZE; i++)
+        //    predicted_time += hparams.alpha[i] * history[DPM_HIST_WIND_SIZE-i];  
+        
+        predicted_time = hparams.alpha[0] * history[DPM_HIST_WIND_SIZE-0];
+        predicted_time += hparams.alpha[1] * history[DPM_HIST_WIND_SIZE-1];
+        predicted_time += hparams.alpha[2] * history[DPM_HIST_WIND_SIZE-1] * history[DPM_HIST_WIND_SIZE-1] ;
+        predicted_time += hparams.alpha[3] * history[DPM_HIST_WIND_SIZE-0] * history[DPM_HIST_WIND_SIZE-1];
+        predicted_time += hparams.alpha[4] * history[DPM_HIST_WIND_SIZE-0] * history[DPM_HIST_WIND_SIZE-0];
     }
     switch (policy) {
 
@@ -162,7 +170,10 @@ int dpm_decide_state(psm_state_t *next_state, psm_state_t prev_state, psm_time_t
                 #endif
                 #ifdef SLEEP
                 *next_state = PSM_STATE_SLEEP;
+                //printf("In SLEEP");
                 #endif
+
+                // Add IDLE_AND_SLEEP
             } else {
                 *next_state = PSM_STATE_RUN;
             }
@@ -175,13 +186,27 @@ int dpm_decide_state(psm_state_t *next_state, psm_state_t prev_state, psm_time_t
             //    double alpha[DPM_HIST_WIND_SIZE]; /**< regression model coefficients */
             //    psm_time_t threshold[DPM_N_THRESHOLDS]; /**< thresholds on the predicted time that trigger a state transition */
             //} dpm_history_params;
-            
-            if(predicted_time > hparams.threshold[1]) // Timeout for SLEEP (5 is T_be)
+#ifdef HISTORY1
+            if(predicted_time >= hparams.threshold[1]){ // Timeout for SLEEP (5 is T_be)
                 *next_state = PSM_STATE_SLEEP;
-            else if(predicted_time > hparams.threshold[0]) // Timeout for IDLE (0.8 is T_be)
+            }else if(predicted_time >= hparams.threshold[0]){ // Timeout for IDLE (0.8 is T_be)
                 *next_state = PSM_STATE_IDLE;
-            else
+            }else{
                 *next_state = PSM_STATE_RUN;
+            }
+#endif
+#ifdef HISTORY2
+            // Predict timeout
+            if(t_curr >= t_inactive_start + predicted_time){
+                if(predicted_time >= hparams.threshold[1])
+                    *next_state = PSM_STATE_SLEEP;
+                else if(predicted_time >= hparams.threshold[0]){ // Timeout for IDLE (0.8 is T_be)
+                    *next_state = PSM_STATE_IDLE;
+                }else{
+                    *next_state = PSM_STATE_RUN;
+                }
+            }
+#endif
             break;
 
         default:
