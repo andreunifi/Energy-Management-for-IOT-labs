@@ -23,6 +23,12 @@ idle:
 sleep:
 	$(MAKE) CFLAGS="$(CFLAGS) -DSLEEP" clean $(TARGET)
 
+history1:
+	$(MAKE) CFLAGS="$(CFLAGS) -DHISTORY1" clean $(TARGET)
+
+history2:
+	$(MAKE) CFLAGS="$(CFLAGS) -DHISTORY2" clean $(TARGET)
+
 docs: Doxyfile $(HEADERS) $(wildcard src/*.c)
 	doxygen $<
 
