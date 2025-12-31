@@ -15,7 +15,7 @@ HEADERS = $(wildcard $(INCDIR)/*.h)
 	$(CC) $(CFLAGS) -I$(INCDIR) -c $< -o $@
 
 $(TARGET): $(OBJECTS) $(TARGET).o
-	$(CC) $(TARGET).o $(OBJECTS) $(CFLAGS) -I$(INCDIR) -o $@ -DIDLE
+	$(CC) $(TARGET).o $(OBJECTS) $(CFLAGS) -I$(INCDIR) -o $@ 
 
 idle:
 	$(MAKE) CFLAGS="$(CFLAGS) -DIDLE" clean $(TARGET)

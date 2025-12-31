@@ -1,0 +1,66 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-g",
+      "-DIDLE",
+      "-I.",
+      "-c",
+      "-o",
+      "src/dpm_policies.o",
+      "src/dpm_policies.c"
+    ],
+    "directory": "/home/giuseppe/Documents/EMIoT/labs/lab1/dpm-simulator",
+    "file": "/home/giuseppe/Documents/EMIoT/labs/lab1/dpm-simulator/src/dpm_policies.c",
+    "output": "/home/giuseppe/Documents/EMIoT/labs/lab1/dpm-simulator/src/dpm_policies.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-g",
+      "-DIDLE",
+      "-I.",
+      "-c",
+      "-o",
+      "src/psm.o",
+      "src/psm.c"
+    ],
+    "directory": "/home/giuseppe/Documents/EMIoT/labs/lab1/dpm-simulator",
+    "file": "/home/giuseppe/Documents/EMIoT/labs/lab1/dpm-simulator/src/psm.c",
+    "output": "/home/giuseppe/Documents/EMIoT/labs/lab1/dpm-simulator/src/psm.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-g",
+      "-DIDLE",
+      "-I.",
+      "-c",
+      "-o",
+      "src/utilities.o",
+      "src/utilities.c"
+    ],
+    "directory": "/home/giuseppe/Documents/EMIoT/labs/lab1/dpm-simulator",
+    "file": "/home/giuseppe/Documents/EMIoT/labs/lab1/dpm-simulator/src/utilities.c",
+    "output": "/home/giuseppe/Documents/EMIoT/labs/lab1/dpm-simulator/src/utilities.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-g",
+      "-DIDLE",
+      "-I.",
+      "-c",
+      "-o",
+      "dpm_simulator.o",
+      "dpm_simulator.c"
+    ],
+    "directory": "/home/giuseppe/Documents/EMIoT/labs/lab1/dpm-simulator",
+    "file": "/home/giuseppe/Documents/EMIoT/labs/lab1/dpm-simulator/dpm_simulator.c",
+    "output": "/home/giuseppe/Documents/EMIoT/labs/lab1/dpm-simulator/dpm_simulator.o"
+  }
+]
