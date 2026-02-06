@@ -72,22 +72,29 @@ def compute_power(image_array):
     return total_power
 
 def compute_pixel_current(pixel):
-    red = pixel[0]
-    blue = pixel[1]
-    green = pixel[2]
+    red   = pixel[0]
+    green = pixel[1]
+    blue  = pixel[2]
 
     cell_current_red    = (p1*vdd*red)/255+(p2*red)/255+p3
-    cell_current_blue   = (p1*vdd*blue)/255+(p2*blue)/255+p3
     cell_current_green  = (p1*vdd*green)/255+(p2*green)/255+p3
-    return cell_current_red+cell_current_blue+cell_current_green
+    cell_current_blue   = (p1*vdd*blue)/255+(p2*blue)/255+p3
+
+    return [cell_current_red, cell_current_green, cell_current_blue]
+
+def compute_panel_currents(image_array):
+    height, width = image_array.shape[:2]
+    panel_currents = np.zeros((height, width, 3))
+
+    for i in range(height):
+        for j in range(width):
+            panel_currents[i, j] = compute_pixel_current(image_array[i, j])
+
+    return panel_currents
 
 def compute_panel_power(image_array):
-    panel_current = 0
-    for i in range(image_array.shape[0]):
-        for j in range(image_array.shape[1]):
-            pixel = image_array[i,j]
-            panel_current += compute_pixel_current(pixel)
-    return panel_current*vdd 
+    panel_currents = compute_panel_currents(image_array)
+    return np.sum(panel_currents)*vdd 
    
 def compute_distortion(image_orig, image_mod):
     """
@@ -147,7 +154,7 @@ def chroma_reduction(image_rgb, chroma_scale=0.4, edge_strength=1.5, blue_scale 
 def luminance_reduction(img, factor=0.8):
     lab = rgb2lab(img/255)
     L = lab[..., 0]
-    L *= 0.8
+    L *= factor
     lab[..., 0] = L
     return(lab2rgb(lab)*255).astype(np.uint8)
 
@@ -158,16 +165,16 @@ def manipulate_image(image_array):
     image_v1.show()
     return image_array_v1
 
-def manipualate_red(image_array):
+def manipulate_red(image_array):
     # Manipulation example: manipulate the red channel
     image_array_v2 = image_array[:, :, 0]
     image_v2 = Image.fromarray(image_array_v2)
     image_v2.show()
 
-def manipulate_hsv_V(image_array, delta=0.2):
+def manipulate_hsv_V(image_array, brightness=0.3 ,contrast=0.0):
     # Convert 
     hsv = rgb2hsv(image_array/255)
-    hsv[:, :, 2] = hsv[:, :, 2] * (1 - delta)
+    hsv[:, :, 2] = np.clip(hsv[:, :, 2] * (1 + contrast) + brightness, 0, 1)
     return (hsv2rgb(hsv)*255).astype(np.uint8)
 
 def manipulate_hsv_equalization(image_array):
@@ -248,41 +255,40 @@ def main():
     image_to_show = 2
     print(f"Loaded: {len(images)} image")
     
-    currents = []
+    new_vdd = 12
+    for i in range(len(images)):
+        original = images[i];
+        modified = original
+         
+        #modified = luminance_reduction(modified, 1.5)
+        modified = manipulate_hsv_V(modified, (np.sqrt((15-new_vdd)/15)), 0)
+        modified = manipulate_hsv_V(modified, 0, ((15-new_vdd)/15)**2)
+        currents = compute_panel_currents(modified)
+        
+        original,modified = displayed_image(np.array(currents), vdd=new_vdd)
+        original = images[i]
+        #modified = reduce_blue(modified)
 
+        analyze(original, modified)
+        plt.imshow(modified)
+        plt.show
+        if i == image_to_show:
+            # Create side-by-side plot
+            plt.figure(figsize=(10, 5))
 
-    for i in range(images[0].shape[0]):
-        for j in range(images[0].shape[1]):
-            pixel = images[0][i,j]
-            currents.append(compute_pixel_current(pixel)) 
-    
-    image_or,images_mod = displayed_image(np.array(currents), vdd=10)
-#    for i in range(len(images)):
-#        original = images[i];
-#        modified = original
-#       
-#        modified = luminance_reduction(modified)
-#        #modified = manipulate_hsv_V(modified)
-#        modified = reduce_blue(modified)
-#
-#        analyze(original, modified)
-#        if i == image_to_show:
-#            # Create side-by-side plot
-#            plt.figure(figsize=(10, 5))
-#
-#            # Original
-#            plt.subplot(1, 2, 1)  # 1 row, 2 columns, first subplot
-#            plt.imshow(original)
-#            plt.title("Original")
-#            plt.axis('off')
-#
-#            # Modified
-#            plt.subplot(1, 2, 2)  # 1 row, 2 columns, second subplot
-#            plt.imshow(modified)
-#            plt.title("Modified")
-#            plt.axis('off')
-#
-#            plt.show()
+            # Original
+            plt.subplot(1, 2, 1)  # 1 row, 2 columns, first subplot
+            plt.imshow(original)
+            plt.title("Original")
+            plt.axis('off')
+
+            # Modified
+            plt.subplot(1, 2, 2)  # 1 row, 2 columns, second subplot
+            plt.imshow(modified)
+            plt.title("Modified")
+            plt.axis('off')
+
+            plt.show()
 
 if __name__ == "__main__":
     main()
