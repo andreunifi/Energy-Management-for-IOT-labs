@@ -95,13 +95,13 @@ def reduce_blue(image_rgb,delta=20):
     return img.astype(np.uint8)
 
 
-def chroma_reduction(image_rgb, chroma_scale=0.6, edge_strength=1.5):
-    """
-    Reduce chroma (a/b in Lab) while preserving edges.
-    - chroma_scale: fraction of chroma to keep
-    - edge_strength: higher = more protection near edges
-    """
-    lab = color.rgb2lab(image_rgb)
+def chroma_reduction(image_rgb, chroma_scale=0.4, edge_strength=1.5, blue_scale = 0.5, green_scale = 0.5):
+    #
+    #Reduce chroma (a/b in Lab) while preserving edges.
+    #   - chroma_scale: fraction of chroma to keep
+    #   - edge_strength: higher = more protection near edges
+    #
+    lab = color.rgb2lab(image_rgb/255)
     L, a, b = lab[..., 0], lab[..., 1], lab[..., 2]
 
 
@@ -113,17 +113,27 @@ def chroma_reduction(image_rgb, chroma_scale=0.6, edge_strength=1.5):
     a *= factor
     b *= factor
 
+
+    a = np.where(a<0, a*green_scale, a)
+    b = np.where(b<0, b*blue_scale, b)
+
     lab[..., 1] = a
     lab[..., 2] = b
-    return np.clip(color.lab2rgb(lab), 0, 1)
+    return (lab2rgb(lab) * 255).astype(np.uint8)
 
-
+def luminance_reduction(img, factor=0.8):
+    lab = rgb2lab(img/255)
+    L = lab[..., 0]
+    L *= 0.8
+    lab[..., 0] = L
+    return(lab2rgb(lab)*255).astype(np.uint8)
 
 def manipulate_image(image_array):
     # Manipulation example: make the image darker
-    image_array_v1 = (image_array * 0.6).astype(np.uint8)
+    image_array_v1 = (image_array * 0.8).astype(np.uint8)
     image_v1 = Image.fromarray(image_array_v1)
     image_v1.show()
+    return image_array_v1
 
 def manipualate_red(image_array):
     # Manipulation example: manipulate the red channel
@@ -188,10 +198,31 @@ def main():
     print(f"Loaded: {len(images)} image")
 
     for i in range(len(images)):
-        analyze(images[i], chroma_reduction(images[i]))
-        # if i == image_to_show:
-        plt.imshow(chroma_reduction(images[i]))
-        plt.show()
+        original = images[i];
+        modified = original
+       
+        modified = luminance_reduction(modified)
+        #modified = manipulate_hsv_V(modified)
+        modified = reduce_blue(modified)
+
+        analyze(original, modified)
+        if i == image_to_show:
+            # Create side-by-side plot
+            plt.figure(figsize=(10, 5))
+
+            # Original
+            plt.subplot(1, 2, 1)  # 1 row, 2 columns, first subplot
+            plt.imshow(original)
+            plt.title("Original")
+            plt.axis('off')
+
+            # Modified
+            plt.subplot(1, 2, 2)  # 1 row, 2 columns, second subplot
+            plt.imshow(modified)
+            plt.title("Modified")
+            plt.axis('off')
+
+            plt.show()
 
 if __name__ == "__main__":
     main()
