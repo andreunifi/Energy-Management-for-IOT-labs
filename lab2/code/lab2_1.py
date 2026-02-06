@@ -3,9 +3,10 @@ from PIL import Image
 import os
 import matplotlib.pyplot as plt
 
-from skimage import exposure 
+from skimage import exposure, color
 from skimage.color import hsv2rgb, rgb2hsv, rgb2lab, lab2rgb 
-
+    # Edge-aware mask
+from skimage import filters
 #Constants:
 # OLED power model coefficients 
 W0 = 0.7755
@@ -94,6 +95,30 @@ def reduce_blue(image_rgb,delta=20):
     return img.astype(np.uint8)
 
 
+def chroma_reduction(image_rgb, chroma_scale=0.6, edge_strength=1.5):
+    """
+    Reduce chroma (a/b in Lab) while preserving edges.
+    - chroma_scale: fraction of chroma to keep
+    - edge_strength: higher = more protection near edges
+    """
+    lab = color.rgb2lab(image_rgb)
+    L, a, b = lab[..., 0], lab[..., 1], lab[..., 2]
+
+
+    edges = filters.sobel(L)
+    edges = (edges - edges.min()) / (edges.max() - edges.min() + 1e-8)
+    edge_mask = np.clip(edges / edge_strength, 0, 1)
+
+    factor = chroma_scale + (1 - chroma_scale) * edge_mask
+    a *= factor
+    b *= factor
+
+    lab[..., 1] = a
+    lab[..., 2] = b
+    return np.clip(color.lab2rgb(lab), 0, 1)
+
+
+
 def manipulate_image(image_array):
     # Manipulation example: make the image darker
     image_array_v1 = (image_array * 0.6).astype(np.uint8)
@@ -163,10 +188,10 @@ def main():
     print(f"Loaded: {len(images)} image")
 
     for i in range(len(images)):
-        analyze(images[i], manipulate_hsv_V(images[i]))
-        if i == image_to_show:
-            plt.imshow(manipulate_hsv_V(images[i]))
-            plt.show()
+        analyze(images[i], chroma_reduction(images[i]))
+        # if i == image_to_show:
+        plt.imshow(chroma_reduction(images[i]))
+        plt.show()
 
 if __name__ == "__main__":
     main()
