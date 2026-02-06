@@ -215,13 +215,48 @@ def analyze(image_orig, image_mod):
 
     print("-" * 65)
 
+
+from typing import Tuple
+
+def displayed_image(
+        i_cell: np.ndarray,
+        vdd: float,
+        p1: float = 4.251e-5,
+        p2: float = -3.029e-4,
+        p3: float = 3.024e-5,
+        orig_vdd: float = 15,
+        ) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Display an image on the OLED display taking into account the effect of DVS.
+
+    :param i_cell: An array of the currents drawn by each pixel of the display.
+    :param vdd: The new voltage of the display.
+    """
+    i_cell_max = (p1 * vdd * 1) + (p2 * 1) + p3
+    image_rgb_max = (i_cell_max - p3) / (p1 * orig_vdd + p2) * 255
+    out = np.round((i_cell - p3) / (p1 * orig_vdd + p2) * 255)
+    original_image = out.copy()
+
+    # Clip the values exceeding `i_cell_max` to `image_rgb_max`
+    out[i_cell > i_cell_max] = image_rgb_max
+
+    return original_image.astype(np.uint8), out.astype(np.uint8)
+
+
 def main():
     images = load_images()
     image_to_show = 2
     print(f"Loaded: {len(images)} image")
     
-    panel_power = compute_panel_power(images[image_to_show])
-    print(panel_power)
+    currents = []
+
+
+    for i in range(images[0].shape[0]):
+        for j in range(images[0].shape[1]):
+            pixel = images[0][i,j]
+            currents.append(compute_pixel_current(pixel)) 
+    
+    image_or,images_mod = displayed_image(np.array(currents), vdd=10)
 #    for i in range(len(images)):
 #        original = images[i];
 #        modified = original
