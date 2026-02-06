@@ -1,8 +1,10 @@
 import numpy as np
 from PIL import Image
 import os
+import matplotlib.pyplot as plt
 
-from skimage.color import rgb2lab, lab2rgb
+from skimage import exposure 
+from skimage.color import hsv2rgb, rgb2hsv, rgb2lab, lab2rgb 
 
 #Constants:
 # OLED power model coefficients 
@@ -11,6 +13,8 @@ WR = 1.48169521e-6
 WG = 1.77746705e-7
 WB = 2.14348309e-7
 Y = 0.7755
+
+max_dist = 4
 
 # Directory containing the .tiff images
 image_dir = "../misc"
@@ -90,7 +94,6 @@ def reduce_blue(image_rgb,delta=20):
     return img.astype(np.uint8)
 
 
-
 def manipulate_image(image_array):
     # Manipulation example: make the image darker
     image_array_v1 = (image_array * 0.6).astype(np.uint8)
@@ -103,47 +106,77 @@ def manipualate_red(image_array):
     image_v2 = Image.fromarray(image_array_v2)
     image_v2.show()
 
-def is_it_greyscale(image_array):
-    image_array_v2 = image_array.copy()
-    image_array_v2[:, :, 1] = 0  # Set green channel to 0
-    image_array_v2[:, :, 2] = 0  # Set blue channel to 0
-    image_v2 = Image.fromarray(image_array_v2)
-    image_v2.show()
+def manipulate_hsv_V(image_array, delta=0.2):
+    # Convert 
+    hsv = rgb2hsv(image_array/255)
+    hsv[:, :, 2] = hsv[:, :, 2] * (1 - delta)
+    return (hsv2rgb(hsv)*255).astype(np.uint8)
 
+def manipulate_hsv_equalization(image_array):
+    hsv = rgb2hsv(image_array/255)
+    
+    hsv[:, :, 2] = exposure.equalize_hist(hsv[:, :, 2])
+    
+    return (hsv2rgb(hsv)*255).astype(np.uint8)
+
+
+def manipulate_hsv_equalization_adapt(image_array):
+    hsv = rgb2hsv(image_array/255)
+    
+    hsv[:, :, 2] = exposure.equalize_adapthist(hsv[:, :, 2], clip_limit=0.03)
+    
+    return (hsv2rgb(hsv)*255).astype(np.uint8)
 
 def convert_to_lab():
     # Convert RGB to Lab color space
     image_array_lab = rgb2lab(image_array)
     return image_array_lab
 
+
+
 def analyze(image_orig, image_mod):
     power_orig = compute_power(image_orig)
     power_mod  = compute_power(image_mod)
     distortion = compute_distortion(image_orig, image_mod)
 
-    print("-" * 60)
+    power_saved_pct = ((power_orig - power_mod) / power_orig) * 100
+
+    print("-" * 65)
     print(f"{'Metric':<20}{'Original':>15}{'Modified':>15}")
-    print("-" * 60)
+    print("-" * 65)
     print(f"{'Power (W)':<20}{power_orig:>15.4f}{power_mod:>15.4f}")
     print(f"{'Distortion (%)':<20}{distortion:>30.2f}")
-    print("-" * 60)
+    print("-" * 65)
 
-    if power_mod > power_orig:
-        print("⚠️  NOTE: Modified image consumes MORE power than original")
+    if power_saved_pct >= 0:
+        print(f"Power saved: {power_saved_pct:6.2f} %")
+        if distortion >= max_dist:
+            print(f"⚠️  Maximum distortion reached")
+    else:
+        print(f"⚠️  Power increase: {abs(power_saved_pct):6.2f} %")
 
-    print("-" * 60)
-
-
+    print("-" * 65)
 
 def main():
     images = load_images()
+    image_to_show = 2
     print(f"Loaded: {len(images)} image")
 
     for i in range(len(images)):
-        analyze(images[i], reduce_blue(images[i]))
+        analyze(images[i], manipulate_hsv_V(images[i]))
+        if i == image_to_show:
+            plt.imshow(manipulate_hsv_V(images[i]))
+            plt.show()
 
 if __name__ == "__main__":
     main()
 
 
+
+
+# DONE:
+#  - hsv: equalization (not good)
+#  - hsv: luminance reduction
+#  - rgb: blue reduction
+#  - custom: dithering and lossless chroma
 
