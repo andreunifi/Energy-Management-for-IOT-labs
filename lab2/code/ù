@@ -84,6 +84,10 @@ def compute_distortion(image_orig, image_mod):
 
     return (avg_dist / max_dist) * 100
 
+def compute_distortion_norm(image_orig, image_mod):
+    shape = image_mod.shape;
+    return compute_distortion(image_orig, image_mod)/(shape[0]*shape[1])
+
 def reduce_blue(image_rgb,delta=20):
     img = image_rgb.copy().astype(np.int16)
     img[:, :, 2] = np.clip(img[:, :, 2] - delta, 0, 255)
@@ -116,31 +120,22 @@ def convert_to_lab():
     image_array_lab = rgb2lab(image_array)
     return image_array_lab
 
-def analyze(image_orig, image_mod):
-    power_orig = compute_power(image_orig)
-    power_mod  = compute_power(image_mod)
-    distortion = compute_distortion(image_orig, image_mod)
-
-    print("-" * 60)
-    print(f"{'Metric':<20}{'Original':>15}{'Modified':>15}")
-    print("-" * 60)
-    print(f"{'Power (W)':<20}{power_orig:>15.4f}{power_mod:>15.4f}")
-    print(f"{'Distortion (%)':<20}{distortion:>30.2f}")
-    print("-" * 60)
-
-    if power_mod > power_orig:
-        print("⚠️  NOTE: Modified image consumes MORE power than original")
-
-    print("-" * 60)
-
-
-
 def main():
     images = load_images()
     print(f"Loaded: {len(images)} image")
 
     for i in range(len(images)):
-        analyze(images[i], reduce_blue(images[i]))
+        power = compute_power(images[i])
+        print(power)
+
+    print("#### COMPUTE DISTORTION ####")
+    for i in range(len(images)):
+        dist = compute_distortion(images[i], reduce_blue(images[i]))
+        print(dist)
+    print("#### COMPUTE DISTORTION - NORM ####")
+    for i in range(len(images)):
+        dist = compute_distortion_norm(images[i], reduce_blue(images[i]))
+        print(dist)
 
 if __name__ == "__main__":
     main()
