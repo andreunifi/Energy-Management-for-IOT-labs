@@ -2,8 +2,10 @@ import numpy as np
 from PIL import Image
 import os
 import matplotlib.pyplot as plt
-
+import random
+import warnings
 from skimage import exposure, color
+
 from skimage.color import hsv2rgb, rgb2hsv, rgb2lab, lab2rgb 
     # Edge-aware mask
 from skimage import filters
@@ -130,28 +132,31 @@ def manipulate_lab(image_rgb, l_gamma, chroma_scale):
     lab = color.rgb2lab(image_rgb/255)
     L, a, b = lab[..., 0], lab[..., 1], lab[..., 2]
     
-    # L perceptual lightness adjustment 
+    # L perceptual lightness adjustment
     L_norm = L / 100.0
     L = 100.0 * np.power(L_norm, l_gamma)
-
-    # Chroma scaling (preserve hue) 
+    
+    # Chroma scaling (preserve hue)
     C = np.sqrt(a**2 + b**2)
     C_safe = np.maximum(C, 1e-6)
-    
     C_new = C * chroma_scale
-
     a = a * (C_new / C_safe)
     b = b * (C_new / C_safe)
     
-    # Clamp to valid LAB range
+    # More conservative clamping for a and b
     L = np.clip(L, 0, 100)
-    a = np.clip(a, -110, 110)
-    b = np.clip(b, -110, 110)
+    a = np.clip(a, -100, 100)  # Reduced from ±120
+    b = np.clip(b, -100, 100)  # Reduced from ±120
     
     lab[..., 0] = L
     lab[..., 1] = a
     lab[..., 2] = b
-    rgb = lab2rgb(lab) 
+    
+    # Suppress warnings or use clip=True
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        rgb = color.lab2rgb(lab)
+    
     return np.clip(rgb * 255, 0, 255).astype(np.uint8)
 
 def chroma_reduction(image_rgb, chroma_scale=0.4, edge_strength=1.5, blue_scale = 0.5, green_scale = 0.5):
@@ -184,8 +189,13 @@ def luminance_reduction(img, factor=0.8):
     lab = rgb2lab(img/255)
     L = lab[..., 0]
     L *= factor
+    L = np.clip(L, 0, 100)
     lab[..., 0] = L
-    return(lab2rgb(lab)*255).astype(np.uint8)
+    # Suppress warnings or use clip=True
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        rgb = color.lab2rgb(lab)
+    return np.clip(rgb * 255, 0, 255).astype(np.uint8)
 
 def manipulate_image(image_array):
     # Manipulation example: make the image darker
@@ -204,7 +214,8 @@ def manipulate_hsv_V(image_array, brightness=0.3 ,contrast=0.0):
     # Convert 
     hsv = rgb2hsv(image_array/255)
     hsv[:, :, 2] = np.clip(hsv[:, :, 2] * (1 + contrast) + brightness, 0, 1)
-    return (hsv2rgb(hsv)*255).astype(np.uint8)
+    rgb = hsv2rgb(hsv)
+    return np.clip(rgb * 255, 0, 255).astype(np.uint8)
 
 def manipulate_hsv_equalization(image_array):
     hsv = rgb2hsv(image_array/255)
@@ -213,7 +224,6 @@ def manipulate_hsv_equalization(image_array):
     
     return (hsv2rgb(hsv)*255).astype(np.uint8)
 
-
 def manipulate_hsv_equalization_adapt(image_array):
     hsv = rgb2hsv(image_array/255)
     
@@ -221,11 +231,10 @@ def manipulate_hsv_equalization_adapt(image_array):
     
     return (hsv2rgb(hsv)*255).astype(np.uint8)
 
-def convert_to_lab():
+def convert_to_lab(image_array):
     # Convert RGB to Lab color space
     image_array_lab = rgb2lab(image_array)
     return image_array_lab
-
 
 
 def analyze(image_orig, image_mod):
@@ -235,21 +244,21 @@ def analyze(image_orig, image_mod):
 
     power_saved_pct = ((power_orig - power_mod) / power_orig) * 100
 
-    print("-" * 65)
-    print(f"{'Metric':<20}{'Original':>15}{'Modified':>15}")
-    print("-" * 65)
-    print(f"{'Power (W)':<20}{power_orig:>15.4f}{power_mod:>15.4f}")
-    print(f"{'Distortion (%)':<20}{distortion:>30.2f}")
-    print("-" * 65)
+    # print("-" * 65)
+    # print(f"{'Metric':<20}{'Original':>15}{'Modified':>15}")
+    # print("-" * 65)
+    # print(f"{'Power (W)':<20}{power_orig:>15.4f}{power_mod:>15.4f}")
+    # print(f"{'Distortion (%)':<20}{distortion:>30.2f}")
+    # print("-" * 65)
 
-    if power_saved_pct >= 0:
-        print(f"Power saved: {power_saved_pct:6.2f} %")
-        if distortion >= max_dist:
-            print(f"⚠️  Maximum distortion reached")
-    else:
-        print(f"⚠️  Power increase: {abs(power_saved_pct):6.2f} %")
+    # if power_saved_pct >= 0:
+    #     print(f"Power saved: {power_saved_pct:6.2f} %")
+    #     if distortion >= max_dist:
+    #         print(f"⚠️  Maximum distortion reached")
+    # else:
+    #     print(f"⚠️  Power increase: {abs(power_saved_pct):6.2f} %")
 
-    print("-" * 65)
+    # print("-" * 65)
     return power_saved_pct, distortion
 
 
@@ -279,6 +288,15 @@ def displayed_image(
 
     return original_image.astype(np.uint8), out.astype(np.uint8)
 
+def random_params():
+    return {
+        "l_gamma": random.uniform(0.7, 1.3),
+        "chroma_scale": random.uniform(0.7, 1.3),
+        "brightness": random.uniform(-0.3, 0.3),
+        "contrast": random.uniform(-0.3, 0.3),
+        "blue_reduction": random.randint(0, 100),
+        "luminance_reduction_factor": random.uniform(0.7, 1.3)
+    }
 
 def main():
     images = load_images()
@@ -286,50 +304,86 @@ def main():
     print(f"Loaded: {len(images)} image")
    
    
-    powers = []
-    distorsions = []
+    # powers = []
+    # distorsions = []
+    best_power_saved = 0
+    for iteration in range(150):
+        params = random_params()
+        powers = []
+        distorsions = []
+        
+        for img in images:
+            modified = img
+            modified = luminance_reduction(modified, params["luminance_reduction_factor"])
+            modified = manipulate_lab(modified, params["l_gamma"], params["chroma_scale"])
+            modified = manipulate_hsv_V(modified, params["brightness"], params["contrast"])
+            # modified = reduce_blue(modified, params["blue_reduction"])
+            
+            power_saved, distorsion = analyze(img, modified)
+            powers.append(power_saved)
+            distorsions.append(distorsion)
+        
+        avg_distorsion = np.average(distorsions)
+        avg_power_saved = np.average(powers)
+        if avg_distorsion < 2.0 and avg_power_saved > best_power_saved:
+            best_power_saved = avg_power_saved
+            best_params = params
+            print(f"Iteration {iteration+1}: New best found! Power: {avg_power_saved:.2f}%, Distortion: {avg_distorsion:.2f}%")
+            print(params)
+        else:
+            print(f"Iteration {iteration+1}, no results")
+            
+    print("\nBest parameters:")
+    print(best_params)
+    print(f"Power saved: {best_power_saved:.2f}%")
+    # new_vdd = 12
 
-    new_vdd = 12
-    for i in range(len(images)):
-        original = images[i];
-        modified = original
-         
+    # l_gamma = 1.0                       # 0 < x < 2, 1 by default, higher than 1 darker
+    # chroma_scale = 1.0                  #
+    # brigthness = 0.0                    # from -1 to 1;
+    # contrast = 0.0                      # from -1 to 1; 
+    # blue_reduction = 0                  # subtract from rgb value the blue channel
+    # luminance_reduction_factor = 1      # percentage, from 0 to 1
 
-        modified = luminance_reduction(modified, 0.95)
-        #modified = reduce_blue(modified, 2)
-        modified = manipulate_hsv_V(modified, brightness=-0.2 ,contrast=0.0)
-        modified = manipulate_hsv_V(modified, brightness=0.0 ,contrast=0.1)
-        modified = manipulate_lab(modified, l_gamma=1.2, chroma_scale=1.0)
+    # for i in range(len(images)):
+    #     original = images[i]
+    #     modified = original
 
-        original = images[i]
-        power_saved, distorsion = analyze(original, modified)
-        powers.append(power_saved)
-        distorsions.append(distorsion)
-        if i == image_to_show:
-        #if i == -1:
-            # Create side-by-side plot
-            plt.figure(figsize=(10, 5))
+    #     modified = luminance_reduction(modified, luminance_reduction_factor)
+    #     modified = manipulate_lab(modified, l_gamma, chroma_scale)
+    #     modified = manipulate_hsv_V(modified, brigthness, contrast)
+    #     modified = reduce_blue(modified, blue_reduction)
 
-            # Original
-            plt.subplot(1, 2, 1)  # 1 row, 2 columns, first subplot
-            plt.imshow(original)
-            plt.title("Original")
-            plt.axis('off')
 
-            # Modified
-            plt.subplot(1, 2, 2)  # 1 row, 2 columns, second subplot
-            plt.imshow(modified)
-            plt.title("Modified")
-            plt.axis('off')
+    #     original = images[i]
+    #     power_saved, distorsion = analyze(original, modified)
+    #     powers.append(power_saved)
+    #     distorsions.append(distorsion)
+    #     # if i == image_to_show:
+    #     if i == -1:
+    #         # Create side-by-side plot
+    #         plt.figure(figsize=(10, 5))
 
-            plt.show()
-    avg_distorsion = np.average(distorsions)
-    avg_power_saved = np.average(powers)
+    #         # Original
+    #         plt.subplot(1, 2, 1)  # 1 row, 2 columns, first subplot
+    #         plt.imshow(original)
+    #         plt.title("Original")
+    #         plt.axis('off')
 
-    print("#################")
-    print(f"Average distorsion:   {avg_distorsion:>10.2f}%")
-    print(f"Average power saving: {avg_power_saved:>10.2f}%")
-    print("#################")
+    #         # Modified
+    #         plt.subplot(1, 2, 2)  # 1 row, 2 columns, second subplot
+    #         plt.imshow(modified)
+    #         plt.title("Modified")
+    #         plt.axis('off')
+
+    #         plt.show()
+    # avg_distorsion = np.average(distorsions)
+    # avg_power_saved = np.average(powers)
+
+    # print("#################")
+    # print(f"Average distorsion:   {avg_distorsion:>10.2f}%")
+    # print(f"Average power saving: {avg_power_saved:>10.2f}%")
+    # print("#################")
 
 if __name__ == "__main__":
     main()
