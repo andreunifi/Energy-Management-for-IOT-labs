@@ -290,12 +290,12 @@ def displayed_image(
 
 def random_params():
     return {
-        "l_gamma": random.uniform(0.80, 1.20),
-        "chroma_scale": random.uniform(0.80, 1.20),
-        "brightness": random.uniform(-0.20, 0.20),
-        "contrast": random.uniform(-0.20, 0.20),
+        "l_gamma": random.uniform(1.00, 1.15),
+        "chroma_scale": random.uniform(1.00, 1.00),
+        "brightness": random.uniform(-0.15, 0.00),
+        "contrast": random.uniform(-0.15, 0.00),
         "blue_reduction": random.randint(0, 100),
-        "luminance_reduction_factor": random.uniform(0.20, 1.20)
+        "luminance_reduction_factor": random.uniform(0.85, 1.00)
     }
 
 def main():
@@ -303,13 +303,10 @@ def main():
     image_to_show = 2
     print(f"Loaded: {len(images)} image")
    
-    dvs = 1
-    newVdd = 11
-     
+   
     # powers = []
     # distorsions = []
     best_power_saved = 0
-    best_params = 0;
     for iteration in range(150):
         params = random_params()
         powers = []
@@ -322,32 +319,23 @@ def main():
             modified = manipulate_hsv_V(modified, params["brightness"], params["contrast"])
             # modified = reduce_blue(modified, params["blue_reduction"])
             
-            if(dvs == 1):
-                currents = compute_panel_currents(modified)
-                ignore, modified = displayed_image(currents, newVdd)
-
             power_saved, distorsion = analyze(img, modified)
             powers.append(power_saved)
             distorsions.append(distorsion)
-
+        
         avg_distorsion = np.average(distorsions)
         avg_power_saved = np.average(powers)
-        if avg_distorsion < 5.0 and avg_power_saved > best_power_saved:
+        if avg_distorsion < 3.0 and avg_power_saved > best_power_saved:
             best_power_saved = avg_power_saved
             best_params = params
             print(f"Iteration {iteration+1}: New best found! Power: {avg_power_saved:.2f}%, Distortion: {avg_distorsion:.2f}%")
             print(params)
-        elif (dvs==1):
-            print(f"Iteration {iteration+1}, no results | Power: {avg_power_saved:.2f}%, Distortion: {avg_distorsion:.2f}%")
-            if(avg_distorsion < 5.0 and avg_power_saved>0):
-                print(params)
-    
-    if(best_params == 0):
-        print("No valid results")
-    else:
-        print("\nBest parameters:")
-        print(best_params)
-        print(f"Power saved: {best_power_saved:.2f}%")
+        else:
+            print(f"Iteration {iteration+1}, no results")
+            
+    print("\nBest parameters:")
+    print(best_params)
+    print(f"Power saved: {best_power_saved:.2f}%")
     # new_vdd = 12
 
     # l_gamma = 1.0                       # 0 < x < 2, 1 by default, higher than 1 darker
