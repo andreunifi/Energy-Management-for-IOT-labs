@@ -1,13 +1,15 @@
+import csv      # To store results
+
 import numpy as np
 from PIL import Image
 import os
+import argparse 
 import matplotlib.pyplot as plt
 import random
 import warnings
 from skimage import exposure, color
 
-from skimage.color import hsv2rgb, rgb2hsv, rgb2lab, lab2rgb 
-    # Edge-aware mask
+from skimage.color import hsv2rgb, rgb2hsv, rgb2lab, lab2rgb
 from skimage import filters
 #Constants:
 # OLED power model coefficients 
@@ -23,12 +25,62 @@ p3 = 3.024e-5
 vdd=15
 
 max_dist = 4
-
+vds_view = 1
 # Directory containing the .tiff images
 image_dir = "../misc"
 
+#
+# To add color to the print
+#
+class bcolors:
+    HEADER =    '\033[95m'
+    OKBLUE =    '\033[94m'
+    OKCYAN =    '\033[96m'
+    OKGREEN =   '\033[92m'
+    WARNING =   '\033[93m'
+    FAIL =      '\033[91m'
+    ENDC =      '\033[0m'
+    BOLD =      '\033[1m'
 
-def load_images():
+#
+# Parser definition
+#
+parser = argparse.ArgumentParser()
+
+parser.add_argument(
+    "--type", 
+    required=True
+)
+
+parser.add_argument(
+    "--iterations",
+    type=int,
+    help="Number of iterations (required for simulation)"
+)
+
+parser.add_argument(
+    "--variation",
+    type=float,
+    help="Variation of randomess (required for simulation)"
+)
+
+parser.add_argument(
+    "--blue_reduction",
+    help="To have blue reduction, is necessary to insert something"
+)
+
+args = parser.parse_args()
+if((args.type == "dvs_sim" or args.type == "basic_sim") and args.iterations is None):
+    parser.error("--iterations is required when --type *sim")
+    exit
+if((args.type == "dvs_sim" or args.type == "basic_sim") and args.variation is None):
+    parser.error("--variation is required when --type *sim")
+    exit
+
+
+
+
+def load_images_tiff():
     # Iterate through all .tiff files in the directory
     images = []
     for file_name in os.listdir(image_dir):
@@ -40,11 +92,35 @@ def load_images():
                     images.append(image_array)
     return images
 
+def load_images_png():
+    # Iterate through all .tiff files in the directory
+    images = []
+    for file_name in os.listdir(image_dir):
+        if file_name.endswith(".png"):
+                file_path = os.path.join(image_dir, file_name)
+                with Image.open(file_path) as image:
+                    rbg_image = image.convert("RGB")
+                    image_array = np.array(rbg_image)
+                    images.append(image_array)
+    return images
+
+def load_images_jpg():
+    # Iterate through all .tiff files in the directory
+    images = []
+    for file_name in os.listdir(image_dir):
+        if file_name.endswith(".jpg"):
+                file_path = os.path.join(image_dir, file_name)
+                with Image.open(file_path) as image:
+                    rbg_image = image.convert("RGB")
+                    image_array = np.array(rbg_image)
+                    images.append(image_array)
+    return images
+
 def load_images_verbose():
     # Iterate through all .tiff files in the directory
     images = []
     for file_name in os.listdir(image_dir):
-        if file_name.endswith(".tiff"):
+        if file_name.endswith(".png"):
                 file_path = os.path.join(image_dir, file_name)
                 with Image.open(file_path) as image:
                     print(f"Loaded image: {file_name}, size: {image.size}")
@@ -288,124 +364,189 @@ def displayed_image(
 
     return original_image.astype(np.uint8), out.astype(np.uint8)
 
-def random_params():
-    return {
-        "l_gamma": random.uniform(0.80, 1.20),
-        "chroma_scale": random.uniform(0.80, 1.20),
-        "brightness": random.uniform(-0.20, 0.20),
-        "contrast": random.uniform(-0.20, 0.20),
-        "blue_reduction": random.randint(0, 100),
-        "luminance_reduction_factor": random.uniform(0.20, 1.20)
-    }
+def random_params(variation, type = "basic"):
+    
+    if (type == "basic"):
+        return {
+            # To use in basic
+            "l_gamma": random.uniform(1-variation, 1),
+            "chroma_scale": random.uniform(1-variation, 1),
+            "brightness": random.uniform(-variation, 0),
+            "contrast": random.uniform(-variation, 0),
+            "blue_reduction": random.randint(0, variation*100),
+            "luminance_reduction_factor": random.uniform(1-variation, 1)
+        }
+        
+        # "l_gamma": random.uniform(1-variation, 1+variation),
+        # "chroma_scale": random.uniform(1-variation, 1+variation),
+        # "brightness": random.uniform(-variation, variation),
+        # "contrast": random.uniform(-variation, variation),
+        # "blue_reduction": random.randint(0, variation*100),
+        # "luminance_reduction_factor": random.uniform(1-variation, 1+variation)
+    else:
+        return {
+            "l_gamma": random.uniform(1-variation, 1+variation),
+            "chroma_scale": random.uniform(1-variation, 1+variation),
+            "brightness": random.uniform(-variation, variation),
+            "contrast": random.uniform(-variation, variation),
+            "blue_reduction": random.randint(0, variation*100),
+            "luminance_reduction_factor": random.uniform(1-variation, 1+variation)
+        }
 
 def main():
-    images = load_images()
-    image_to_show = 2
+    print("Loading tiff images...")
+    tiff_images = load_images_tiff()
+    print("Loading png images...")
+    png_images = load_images_png()
+    print("Loading jpg images...")
+    jpg_images = load_images_jpg()
+
+    images = tiff_images+jpg_images+png_images
     print(f"Loaded: {len(images)} image")
-   
-    dvs = 1
+    
+    dvs = 0
+    simulation = 0
+    if(args.type == "dvs_sim" or args.type == "basic_sim"):
+        simulation = 1
+    if(args.type == "dvs_sim"):
+        dvs = 1
+
     newVdd = 11
      
-    # powers = []
-    # distorsions = []
     best_power_saved = 0
-    best_params = 0;
-    for iteration in range(150):
-        params = random_params()
-        powers = []
-        distorsions = []
-        
-        for img in images:
-            modified = img
-            modified = luminance_reduction(modified, params["luminance_reduction_factor"])
-            modified = manipulate_lab(modified, params["l_gamma"], params["chroma_scale"])
-            modified = manipulate_hsv_V(modified, params["brightness"], params["contrast"])
-            # modified = reduce_blue(modified, params["blue_reduction"])
+    best_params = 0
+    if simulation == 1:
+        results_log = []
+        # Iterate for n types 
+        for iteration in range(args.iterations):
+            params = random_params(args.variation)
+            powers = []
+            distorsions = []
             
-            if(dvs == 1):
-                currents = compute_panel_currents(modified)
-                ignore, modified = displayed_image(currents, newVdd)
+            for img in images:
+                modified = img
+                modified = luminance_reduction(modified, params["luminance_reduction_factor"])
+                modified = manipulate_lab(modified, params["l_gamma"], params["chroma_scale"])
+                modified = manipulate_hsv_V(modified, params["brightness"], params["contrast"])
+                if(args.blue_reduction is not None):
+                    modified = reduce_blue(modified, params["blue_reduction"])
+                
+                if(dvs == 1):
+                    currents = compute_panel_currents(modified)
+                    ignore, modified = displayed_image(currents, newVdd)
 
-            power_saved, distorsion = analyze(img, modified)
+                power_saved, distorsion = analyze(img, modified)
+                powers.append(power_saved)
+                distorsions.append(distorsion)
+
+            avg_distorsion = np.average(distorsions)
+            avg_power_saved = np.average(powers)
+            if avg_distorsion < 10.0 and avg_power_saved > 0:
+                entry = {
+                    "iteration": iteration + 1,
+                    "power_saved_pct": round(avg_power_saved, 4),
+                    "distortion_pct": round(avg_distorsion, 4),
+                    "l_gamma": params["l_gamma"],
+                    "chroma_scale": params["chroma_scale"],
+                    "brightness": params["brightness"],
+                    "contrast": params["contrast"],
+                    "blue_reduction": params["blue_reduction"],
+                    "lum_red_factor": params["luminance_reduction_factor"]
+                }
+                results_log.append(entry)
+                if avg_power_saved > best_power_saved:
+                    best_power_saved = avg_power_saved
+                    best_params = params
+                    print(f"Iter {iteration+1}: {bcolors.OKGREEN}New best!{bcolors.ENDC} Power: {avg_power_saved:.2f}%, Distortion: {avg_distorsion:.2f}%")
+                    print(params)
+                else:
+                    print(f"Iteration {iteration+1}, added result | Power: {avg_power_saved:.2f}%, Distortion: {avg_distorsion:.2f}%")
+            else:
+                print(f"Iteration {iteration+1}, no results | Power: {avg_power_saved:.2f}%, Distortion: {avg_distorsion:.2f}%")
+
+        if results_log:
+            keys = results_log[0].keys()
+            filename = "simulation_results.csv"
+            with open(filename, 'w', newline='') as output_file:
+                dict_writer = csv.DictWriter(output_file, fieldnames=keys)
+                dict_writer.writeheader()
+                dict_writer.writerows(results_log)
+            print(f"\n{bcolors.OKGREEN}Results saved correctly in: {filename}{bcolors.ENDC}")
+        else:
+            print(f"\n{bcolors.WARNING}No valid result.{bcolors.ENDC}")
+            
+        if(best_params == 0):
+            print(f"\n{bcolors.WARNING}No valid results.{bcolors.ENDC}")
+        else:
+            print("\nBest parameters:")
+            print(best_params)
+            print(f"Power saved: {best_power_saved:.2f}%")
+    else:   # Testing data found
+        powers = []
+        distorsions = [] 
+        params = random_params(args.variation)
+        if(vds_view == 1):
+            new_vdd                     = 14
+            l_gamma                     = 1.049853019793737         # 0 < x < 2, 1 by default, higher than 1 darker
+            chroma_scale                = 1.0                       #
+            brigthness                  =  -0.12111748521954796     # from -1 to 1;
+            contrast                    = 0.046585495014685674      # from -1 to 1;
+            blue_reduction              = params["blue_reduction"]  # subtract from rgb value the blue channel
+            luminance_reduction_factor  = 1.0095184785062066     
+        else:   # basic_view == 1
+            l_gamma                     = 1.0420693036510027        # 0 < x < 2, 1 by default, higher than 1 darker
+            chroma_scale                = 1.0                       #
+            brigthness                  = -0.021854732308108055     # from -1 to 1;
+            contrast                    = -0.014176761994277282     # from -1 to 1; 
+            blue_reduction              = params["blue_reduction"]  # subtract from rgb value the blue channel
+            luminance_reduction_factor  = 0.8728434496295949   
+        blue_reduction = 20  
+        print(f"The blue reducton is: {blue_reduction}")
+        for i in range(len(images)):
+            original = images[i]
+            modified = original
+
+            modified = luminance_reduction(modified, luminance_reduction_factor)
+            modified = manipulate_lab(modified, l_gamma, chroma_scale)
+            modified = manipulate_hsv_V(modified, brigthness, contrast)
+            modified = reduce_blue(modified, blue_reduction)
+
+            if(False):
+                modified = reduce_blue(modified, params["blue_reduction"])
+            
+            if(vds_view == 1):
+                currents = compute_panel_currents(modified)
+                ignore, modified = displayed_image(currents, new_vdd)
+
+            original = images[i]
+            power_saved, distorsion = analyze(original, modified)
             powers.append(power_saved)
             distorsions.append(distorsion)
+            if i == i:      # show each image
+            # if i == -1:     # show no image
+                # Create side-by-side plot
+                plt.figure(figsize=(10, 5))
+                
+                # Original
+                plt.subplot(1, 2, 1)  # 1 row, 2 columns, first subplot
+                plt.imshow(original)
+                plt.title("Original")
+                plt.axis('off')
 
+                # Modified
+                plt.subplot(1, 2, 2)  # 1 row, 2 columns, second subplot
+                plt.imshow(modified)
+                plt.title("Modified")
+                plt.axis('off')
+
+                plt.show()
         avg_distorsion = np.average(distorsions)
         avg_power_saved = np.average(powers)
-        if avg_distorsion < 5.0 and avg_power_saved > best_power_saved:
-            best_power_saved = avg_power_saved
-            best_params = params
-            print(f"Iteration {iteration+1}: New best found! Power: {avg_power_saved:.2f}%, Distortion: {avg_distorsion:.2f}%")
-            print(params)
-        elif (dvs==1):
-            print(f"Iteration {iteration+1}, no results | Power: {avg_power_saved:.2f}%, Distortion: {avg_distorsion:.2f}%")
-            if(avg_distorsion < 5.0 and avg_power_saved>0):
-                print(params)
-    
-    if(best_params == 0):
-        print("No valid results")
-    else:
-        print("\nBest parameters:")
-        print(best_params)
-        print(f"Power saved: {best_power_saved:.2f}%")
-    # new_vdd = 12
 
-    # l_gamma = 1.0                       # 0 < x < 2, 1 by default, higher than 1 darker
-    # chroma_scale = 1.0                  #
-    # brigthness = 0.0                    # from -1 to 1;
-    # contrast = 0.0                      # from -1 to 1; 
-    # blue_reduction = 0                  # subtract from rgb value the blue channel
-    # luminance_reduction_factor = 1      # percentage, from 0 to 1
-
-    # for i in range(len(images)):
-    #     original = images[i]
-    #     modified = original
-
-    #     modified = luminance_reduction(modified, luminance_reduction_factor)
-    #     modified = manipulate_lab(modified, l_gamma, chroma_scale)
-    #     modified = manipulate_hsv_V(modified, brigthness, contrast)
-    #     modified = reduce_blue(modified, blue_reduction)
-
-
-    #     original = images[i]
-    #     power_saved, distorsion = analyze(original, modified)
-    #     powers.append(power_saved)
-    #     distorsions.append(distorsion)
-    #     # if i == image_to_show:
-    #     if i == -1:
-    #         # Create side-by-side plot
-    #         plt.figure(figsize=(10, 5))
-
-    #         # Original
-    #         plt.subplot(1, 2, 1)  # 1 row, 2 columns, first subplot
-    #         plt.imshow(original)
-    #         plt.title("Original")
-    #         plt.axis('off')
-
-    #         # Modified
-    #         plt.subplot(1, 2, 2)  # 1 row, 2 columns, second subplot
-    #         plt.imshow(modified)
-    #         plt.title("Modified")
-    #         plt.axis('off')
-
-    #         plt.show()
-    # avg_distorsion = np.average(distorsions)
-    # avg_power_saved = np.average(powers)
-
-    # print("#################")
-    # print(f"Average distorsion:   {avg_distorsion:>10.2f}%")
-    # print(f"Average power saving: {avg_power_saved:>10.2f}%")
-    # print("#################")
+        print("#################")
+        print(f"Average distorsion:   {avg_distorsion:>10.2f}%")
+        print(f"Average power saving: {avg_power_saved:>10.2f}%")
+        print("#################")
 
 if __name__ == "__main__":
     main()
-
-
-
-
-# DONE:
-#  - hsv: equalization (not good)
-#  - hsv: luminance reduction
-#  - rgb: blue reduction
-#  - custom: dithering and lossless chroma
-
