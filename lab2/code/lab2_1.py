@@ -107,10 +107,14 @@ def load_images_png():
 def load_images_jpg():
     # Iterate through all .tiff files in the directory
     images = []
+    counter = 0
     for file_name in os.listdir(image_dir):
         if file_name.endswith(".jpg"):
                 file_path = os.path.join(image_dir, file_name)
                 with Image.open(file_path) as image:
+                    counter+=1
+                    if(counter == 30):
+                        return images
                     rbg_image = image.convert("RGB")
                     image_array = np.array(rbg_image)
                     images.append(image_array)
