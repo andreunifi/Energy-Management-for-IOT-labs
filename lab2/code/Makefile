@@ -10,7 +10,7 @@ dvs_simulation: lab2_1.py
 	python3 lab2_1.py --type dvs_sim --iteration $(ITER) --variation $(VAR)
 
 run: lab2_1.py
-	python3 lab2_1.py
+	python3 lab2_1.py --type no_sim --variation $(VAR)
 
 open: 
 	nvim lab2_1.py
