@@ -1,4 +1,13 @@
-.PHONY: run open
+.PHONY: run open basic_simulation dvs_simulation
+
+ITER ?= 150
+VAR ?= 0.2
+
+basic_simulation: lab2_1.py
+	python3 lab2_1.py --type basic_sim --iteration $(ITER) --variation $(VAR)
+
+dvs_simulation: lab2_1.py
+	python3 lab2_1.py --type dvs_sim --iteration $(ITER) --variation $(VAR)
 
 run: lab2_1.py
 	python3 lab2_1.py
