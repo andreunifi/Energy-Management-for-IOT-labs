@@ -1,18 +1,23 @@
 import csv                                  # To store results
 from datetime import datetime               # To save csv files with timestamp
 
-import numpy as np
-from PIL import Image
-import os
-import argparse 
-import matplotlib.pyplot as plt
-import random
-import warnings
-from skimage import exposure, color
+import argparse                             # To pass parameters from shell
+import random                               # To allow random variable
+import numpy as np                          # To manage arrays
 
+import os                                   # To open files
+
+import matplotlib.pyplot as plt             # To plot images
+
+import warnings                             # Sometimes a warning appears and in this way we avoid to print it
+
+from PIL import Image                       # Images managing
+from skimage import exposure, color
 from skimage.color import hsv2rgb, rgb2hsv, rgb2lab, lab2rgb
 from skimage import filters
-#Constants:
+from typing import Tuple
+
+# Constants:
 # OLED power model coefficients 
 W0 = 0.7755
 WR = 1.48169521e-6
@@ -20,15 +25,17 @@ WG = 1.77746705e-7
 WB = 2.14348309e-7
 Y = 0.7755
 
+# OLED current model coefficients
 p1 = 4.251e-5
 p2 = -3.029e-4
 p3 = 3.024e-5
 vdd=15
 
-max_dist = 4
-vds_view = 1
-# Directory containing the .tiff images
-image_dir = "../misc"
+vds_view = 1                                # TODO It should be modified with a argument from input
+                                            # When not simulating this variable is used to differentiate between basic and vds
+                                            # Useful to test the vds/basic best parameters (hardcoded)
+
+image_dir = "../misc"                       # Directory containing the images
 
 #
 # To add color to the print
@@ -76,6 +83,7 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
+# In some case some other arguments are mandatory
 if((args.type == "dvs_sim" or args.type == "basic_sim") and args.iterations is None):
     parser.error("--iterations is required when --type *sim")
     exit
@@ -88,33 +96,45 @@ if((args.type == "dvs_sim") and args.newvdd is None):
 
 
 
-
-def load_images_tiff():
-    # Iterate through all .tiff files in the directory
+#
+# .tiff images loading function
+#
+def load_images_tiff(max_loaded_images = 30):
     images = []
+    counter = 0
     for file_name in os.listdir(image_dir):
         if file_name.endswith(".tiff"):
                 file_path = os.path.join(image_dir, file_name)
                 with Image.open(file_path) as image:
-                    image.show()
+                    counter+=1
+                    if(counter == max_loaded_images):
+                        return images
                     image_array = np.array(image)
                     images.append(image_array)
     return images
 
-def load_images_png():
-    # Iterate through all .tiff files in the directory
+#
+# .png images loading function
+#
+def load_images_png(max_loaded_images = 30):
     images = []
+    counter = 0
     for file_name in os.listdir(image_dir):
         if file_name.endswith(".png"):
                 file_path = os.path.join(image_dir, file_name)
                 with Image.open(file_path) as image:
+                    counter+=1
+                    if(counter == max_loaded_images):
+                        return images
                     rbg_image = image.convert("RGB")
                     image_array = np.array(rbg_image)
                     images.append(image_array)
     return images
 
-def load_images_jpg():
-    # Iterate through all .tiff files in the directory
+#
+# .jpg images loading function
+#
+def load_images_jpg(max_loaded_images = 30):
     images = []
     counter = 0
     for file_name in os.listdir(image_dir):
@@ -122,15 +142,16 @@ def load_images_jpg():
                 file_path = os.path.join(image_dir, file_name)
                 with Image.open(file_path) as image:
                     counter+=1
-                    if(counter == 30):
+                    if(counter == max_loaded_images):
                         return images
                     rbg_image = image.convert("RGB")
                     image_array = np.array(rbg_image)
                     images.append(image_array)
     return images
-
+#
+# This will load and print all png images (used only in debuf)
+#
 def load_images_verbose():
-    # Iterate through all .tiff files in the directory
     images = []
     for file_name in os.listdir(image_dir):
         if file_name.endswith(".png"):
@@ -147,12 +168,12 @@ def load_images_verbose():
     return images
 
 
-
+#
+# Estimate OLED power throug a power model
+#   image_rgb: numpy array (H, W, 3), uint8 [0–255]
+#   Returns total power (W)
+#
 def compute_power(image_array):
-    #Estimate OLED power consumption of an RGB image.
-    #image_rgb: numpy array (H, W, 3), uint8 [0–255]
-    #Returns total power (W)
-    
     R = image_array[:, :, 0]
     G = image_array[:, :, 1]
     B = image_array[:, :, 2]
@@ -162,6 +183,11 @@ def compute_power(image_array):
 
     return total_power
 
+#
+# Estimate OLED pixel current
+#   pixel: numpy array (R, G, B), uint8 [0–255]
+#   Returns current: (Current_R, Current_G, Current_B)
+#
 def compute_pixel_current(pixel):
     red   = pixel[0]
     green = pixel[1]
@@ -173,6 +199,11 @@ def compute_pixel_current(pixel):
 
     return [cell_current_red, cell_current_green, cell_current_blue]
 
+#
+# Estimate OLED panel current
+#   image: numpy array (H, W, 3), uint8 [0–255]
+#   Returns current: array of [H*W](Current_R, Current_G, Current_B)
+#
 def compute_panel_currents(image_array):
     height, width = image_array.shape[:2]
     panel_currents = np.zeros((height, width, 3))
@@ -183,10 +214,20 @@ def compute_panel_currents(image_array):
 
     return panel_currents
 
+#
+# Estimate OLED panel current
+#   image: numpy array (H, W, 3), uint8 [0–255]
+#   Returns power computed as currents*vdd
+#
 def compute_panel_power(image_array):
     panel_currents = compute_panel_currents(image_array)
     return np.sum(panel_currents)*vdd 
    
+#
+# Compute distortion between two images of the same shape
+#   images: numpy array (H, W, 3), uint8 [0–255]
+#   Returns distortion as the average value of dist in L*a*b domain
+#
 def compute_distortion(image_orig, image_mod):
     """
     Computes LAB Euclidean distortion between two images.
@@ -210,11 +251,22 @@ def compute_distortion(image_orig, image_mod):
 
     return (avg_dist / max_dist) * 100
 
+#
+# Compute distortion between two images of the same shape
+#   images: numpy array (H, W, 3), uint8 [0–255]
+#   Returns the same image with a reduced blue by a value
+#
 def reduce_blue(image_rgb,delta=20):
     img = image_rgb.copy().astype(np.int16)
-    img[:, :, 2] = np.clip(img[:, :, 2] * (100-delta)/100, 0, 255)
+    img[:, :, 2] = np.clip(img[:, :, 2] - delta, 0, 255)
     return img.astype(np.uint8)
 
+
+#
+# Compute distortion between two images of the same shape
+#   images: numpy array (H, W, 3), uint8 [0–255]
+#   Returns the after transformation in Lab domain
+#
 def manipulate_lab(image_rgb, l_gamma, chroma_scale):
     # l_gamma > 1.0 darker
     # chroma_scale < 1.0 desaturation
@@ -274,6 +326,11 @@ def chroma_reduction(image_rgb, chroma_scale=0.4, edge_strength=1.5, blue_scale 
     lab[..., 2] = b
     return (lab2rgb(lab) * 255).astype(np.uint8)
 
+#
+# Compute distortion between two images of the same shape
+#   images: numpy array (H, W, 3), uint8 [0–255]
+#   Returns the after transformation in Lab by modifying the L of L*a*b
+#
 def luminance_reduction(img, factor=0.8):
     lab = rgb2lab(img/255)
     L = lab[..., 0]
@@ -286,26 +343,26 @@ def luminance_reduction(img, factor=0.8):
         rgb = color.lab2rgb(lab)
     return np.clip(rgb * 255, 0, 255).astype(np.uint8)
 
-def manipulate_image(image_array):
-    # Manipulation example: make the image darker
-    image_array_v1 = (image_array * 1.8).astype(np.uint8)
-    image_v1 = Image.fromarray(image_array_v1)
-    image_v1.show()
-    return image_array_v1
-
 def manipulate_red(image_array):
     # Manipulation example: manipulate the red channel
     image_array_v2 = image_array[:, :, 0]
     image_v2 = Image.fromarray(image_array_v2)
     image_v2.show()
 
+#
+# Compute distortion between two images of the same shape
+#   images: numpy array (H, W, 3), uint8 [0–255]
+#   Returns the after transformation in HSV domain, only V modified
+#
 def manipulate_hsv_V(image_array, brightness=0.3 ,contrast=0.0):
-    # Convert 
     hsv = rgb2hsv(image_array/255)
     hsv[:, :, 2] = np.clip(hsv[:, :, 2] * (1 + contrast) + brightness, 0, 1)
     rgb = hsv2rgb(hsv)
     return np.clip(rgb * 255, 0, 255).astype(np.uint8)
 
+#
+# Not used distortion/power saving not worth
+#
 def manipulate_hsv_equalization(image_array):
     hsv = rgb2hsv(image_array/255)
     
@@ -313,18 +370,15 @@ def manipulate_hsv_equalization(image_array):
     
     return (hsv2rgb(hsv)*255).astype(np.uint8)
 
+#
+# Not used distortion/power saving not worth
+#
 def manipulate_hsv_equalization_adapt(image_array):
     hsv = rgb2hsv(image_array/255)
     
     hsv[:, :, 2] = exposure.equalize_adapthist(hsv[:, :, 2], clip_limit=0.03)
     
     return (hsv2rgb(hsv)*255).astype(np.uint8)
-
-def convert_to_lab(image_array):
-    # Convert RGB to Lab color space
-    image_array_lab = rgb2lab(image_array)
-    return image_array_lab
-
 
 def analyze(image_orig, image_mod):
     power_orig = compute_power(image_orig)
@@ -350,8 +404,6 @@ def analyze(image_orig, image_mod):
     # print("-" * 65)
     return power_saved_pct, distortion
 
-
-from typing import Tuple
 
 def displayed_image(
         i_cell: np.ndarray,
@@ -389,15 +441,11 @@ def random_params(variation, type = "basic"):
             "blue_reduction": random.randint(0, variation*100),
             "luminance_reduction_factor": random.uniform(1-variation, 1)
         }
-        
-        # "l_gamma": random.uniform(1-variation, 1+variation),
-        # "chroma_scale": random.uniform(1-variation, 1+variation),
-        # "brightness": random.uniform(-variation, variation),
-        # "contrast": random.uniform(-variation, variation),
-        # "blue_reduction": random.randint(0, variation*100),
-        # "luminance_reduction_factor": random.uniform(1-variation, 1+variation)
     else:
         return {
+            # To use in dvs
+            # The difference: the compensation, so increment in power 
+            # using is allowed as compensation technique
             "l_gamma": random.uniform(1-variation, 1+variation),
             "chroma_scale": random.uniform(1-variation, 1+variation),
             "brightness": random.uniform(-variation, variation),
@@ -432,7 +480,10 @@ def main():
         results_log = []
         # Iterate for n types 
         for iteration in range(args.iterations):
-            params = random_params(args.variation)
+            if(dvs == 1):
+                params = random_params(args.variation, type = "dvs")
+            else:
+                params = random_params(args.variation, type = "basic")
             powers = []
             distorsions = []
             
