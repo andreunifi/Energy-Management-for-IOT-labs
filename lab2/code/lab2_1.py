@@ -79,6 +79,7 @@ parser.add_argument(
 
 parser.add_argument(
     "--newvdd",
+    type=int,
     help="In case of vds, a new Vdd is required to adapt the currents"
 )
 
@@ -471,8 +472,8 @@ def main():
         simulation = 1
     if(args.type == "dvs_sim"):
         dvs = 1
+        newVdd = args.newvdd
 
-    newVdd = params["newvdd"]
      
     best_power_saved = 0
     best_params = 0
