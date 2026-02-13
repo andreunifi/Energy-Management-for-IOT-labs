@@ -1,4 +1,5 @@
-import csv      # To store results
+import csv                                  # To store results
+from datetime import datetime               # To save csv files with timestamp
 
 import numpy as np
 from PIL import Image
@@ -69,12 +70,20 @@ parser.add_argument(
     help="To have blue reduction, is necessary to insert something"
 )
 
+parser.add_argument(
+    "--newvdd",
+    help="In case of vds, a new Vdd is required to adapt the currents"
+)
+
 args = parser.parse_args()
 if((args.type == "dvs_sim" or args.type == "basic_sim") and args.iterations is None):
     parser.error("--iterations is required when --type *sim")
     exit
 if((args.type == "dvs_sim" or args.type == "basic_sim") and args.variation is None):
     parser.error("--variation is required when --type *sim")
+    exit
+if((args.type == "dvs_sim") and args.newvdd is None):
+    parser.error("--newvdd is required when --type dvs_sim")
     exit
 
 
@@ -373,7 +382,7 @@ def random_params(variation, type = "basic"):
     if (type == "basic"):
         return {
             # To use in basic
-            "l_gamma": random.uniform(1-variation, 1),
+            "l_gamma": random.uniform(1, 1+variation),
             "chroma_scale": random.uniform(1-variation, 1),
             "brightness": random.uniform(-variation, 0),
             "contrast": random.uniform(-variation, 0),
@@ -415,7 +424,7 @@ def main():
     if(args.type == "dvs_sim"):
         dvs = 1
 
-    newVdd = 11
+    newVdd = params["newvdd"]
      
     best_power_saved = 0
     best_params = 0
@@ -470,7 +479,15 @@ def main():
 
         if results_log:
             keys = results_log[0].keys()
-            filename = "simulation_results.csv"
+            filename = "simulation_results"
+            if(args.blue_reduction is not None):
+                filename +=  "_blue"
+            if(dvs == 1):
+                filename += "_dvs" + str(newVdd)
+            else:
+                filename += "_basic"
+            filename += "." + datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename += ".csv"
             with open(filename, 'w', newline='') as output_file:
                 dict_writer = csv.DictWriter(output_file, fieldnames=keys)
                 dict_writer.writeheader()
@@ -490,7 +507,6 @@ def main():
         distorsions = [] 
         params = random_params(args.variation)
         if(vds_view == 1):
-            new_vdd                     = 14
             l_gamma                     = 1.049853019793737         # 0 < x < 2, 1 by default, higher than 1 darker
             chroma_scale                = 1.0                       #
             brigthness                  =  -0.12111748521954796     # from -1 to 1;
@@ -520,7 +536,7 @@ def main():
             
             if(vds_view == 1):
                 currents = compute_panel_currents(modified)
-                ignore, modified = displayed_image(currents, new_vdd)
+                ignore, modified = displayed_image(currents, newVdd)
 
             original = images[i]
             power_saved, distorsion = analyze(original, modified)
