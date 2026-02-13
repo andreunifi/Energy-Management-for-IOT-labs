@@ -439,7 +439,7 @@ def random_params(variation, type = "basic"):
             "chroma_scale": random.uniform(1-variation, 1),
             "brightness": random.uniform(-variation, 0),
             "contrast": random.uniform(-variation, 0),
-            "blue_reduction": random.randint(0, variation*100),
+            #"blue_reduction": random.randint(0, variation*100),
             "luminance_reduction_factor": random.uniform(1-variation, 1)
         }
     else:
@@ -451,7 +451,7 @@ def random_params(variation, type = "basic"):
             "chroma_scale": random.uniform(1-variation, 1+variation),
             "brightness": random.uniform(-variation, variation),
             "contrast": random.uniform(-variation, variation),
-            "blue_reduction": random.randint(0, variation*100),
+            #"blue_reduction": random.randint(0, variation*100),
             "luminance_reduction_factor": random.uniform(1-variation, 1+variation)
         }
 
