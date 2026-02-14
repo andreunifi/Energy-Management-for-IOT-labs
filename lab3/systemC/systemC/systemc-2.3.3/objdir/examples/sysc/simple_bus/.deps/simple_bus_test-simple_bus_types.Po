@@ -1,0 +1,4 @@
+simple_bus/simple_bus_test-simple_bus_types.o: \
+ ../../../examples/sysc/simple_bus/simple_bus_types.cpp \
+ /usr/include/stdc-predef.h
+/usr/include/stdc-predef.h:

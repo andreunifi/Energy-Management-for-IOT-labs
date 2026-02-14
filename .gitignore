@@ -54,6 +54,10 @@ dkms.conf
 # Results
 ./lab1/dpm-simulator/results/*
 
+# Installation folder of systemC
+./lab3/systemC/systemC/systemc-2.3.3/*
+./lab3/systemC/systemCams/systemc-ams-2.3/*
+
 # debug information files
 *.dwo
 *:Zone.Identifier
