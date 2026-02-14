@@ -1,0 +1,513 @@
+===== BASIC SIMULATIONS =====
+Running basic_sim | variation=0.05 | repeat=1
+python3 lab2_1.py --type basic_sim --iteration 10 --variation 0.05
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iter 1: [92mNew best![0m Power: 10.28%, Distortion: 1.75%
+{'l_gamma': 1.008546163280057, 'chroma_scale': 0.9934971425117768, 'brightness': -0.030802134029807818, 'contrast': -0.044984168438545906, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9929949716098999}
+Iteration 2, added result | Power: 7.98%, Distortion: 1.43%
+Iter 3: [92mNew best![0m Power: 12.75%, Distortion: 2.07%
+{'l_gamma': 1.0400216772105606, 'chroma_scale': 0.9932934204262793, 'brightness': -0.0420154803302191, 'contrast': -0.020583620316966575, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9837036037651765}
+Iteration 4, added result | Power: 8.70%, Distortion: 1.46%
+Iter 5: [92mNew best![0m Power: 13.48%, Distortion: 2.20%
+{'l_gamma': 1.0295239871401844, 'chroma_scale': 0.9939622137457377, 'brightness': -0.029388119438853052, 'contrast': -0.0381864793543808, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9589758044160615}
+Iter 6: [92mNew best![0m Power: 13.55%, Distortion: 2.19%
+{'l_gamma': 1.0409541214926699, 'chroma_scale': 0.9834503956535084, 'brightness': -0.04037168499400646, 'contrast': -0.008759425718649537, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9606237938494901}
+Iteration 7, added result | Power: 9.32%, Distortion: 1.57%
+Iteration 8, added result | Power: 8.25%, Distortion: 1.39%
+Iteration 9, added result | Power: 8.23%, Distortion: 1.50%
+Iteration 10, added result | Power: 10.21%, Distortion: 1.69%
+
+[92mResults saved correctly in: simulation_results_basic.20260214_003816.csv[0m
+
+Best parameters:
+{'l_gamma': 1.0409541214926699, 'chroma_scale': 0.9834503956535084, 'brightness': -0.04037168499400646, 'contrast': -0.008759425718649537, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9606237938494901}
+Power saved: 13.55%
+Running basic_sim | variation=0.05 | repeat=2
+python3 lab2_1.py --type basic_sim --iteration 10 --variation 0.05
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iter 1: [92mNew best![0m Power: 6.01%, Distortion: 1.05%
+{'l_gamma': 1.0306389645627227, 'chroma_scale': 0.9532547925390459, 'brightness': -0.005685024074297468, 'contrast': -0.007867920032461541, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9731978703257587}
+Iteration 2, added result | Power: 5.94%, Distortion: 1.09%
+Iter 3: [92mNew best![0m Power: 12.92%, Distortion: 2.23%
+{'l_gamma': 1.0377009823718988, 'chroma_scale': 0.9596875809104743, 'brightness': -0.024261725525331537, 'contrast': -0.046441173503550925, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9632889868235692}
+Iteration 4, added result | Power: 9.24%, Distortion: 1.57%
+Iteration 5, added result | Power: 8.14%, Distortion: 1.23%
+Iteration 6, added result | Power: 9.71%, Distortion: 1.74%
+Iteration 7, added result | Power: 12.50%, Distortion: 2.00%
+Iteration 8, added result | Power: 6.67%, Distortion: 1.19%
+Iteration 9, added result | Power: 10.91%, Distortion: 1.94%
+Iteration 10, added result | Power: 8.20%, Distortion: 1.26%
+
+[92mResults saved correctly in: simulation_results_basic.20260214_004501.csv[0m
+
+Best parameters:
+{'l_gamma': 1.0377009823718988, 'chroma_scale': 0.9596875809104743, 'brightness': -0.024261725525331537, 'contrast': -0.046441173503550925, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9632889868235692}
+Power saved: 12.92%
+Running basic_sim | variation=0.1 | repeat=1
+python3 lab2_1.py --type basic_sim --iteration 10 --variation 0.1
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iter 1: [92mNew best![0m Power: 30.46%, Distortion: 5.09%
+{'l_gamma': 1.0851722208197034, 'chroma_scale': 0.9525154194341828, 'brightness': -0.09018465406997792, 'contrast': -0.045474529739677874, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9056116212097108}
+Iteration 2, added result | Power: 26.34%, Distortion: 4.42%
+Iteration 3, added result | Power: 10.94%, Distortion: 2.04%
+Iteration 4, added result | Power: 18.18%, Distortion: 3.18%
+Iteration 5, added result | Power: 11.11%, Distortion: 2.22%
+Iteration 6, added result | Power: 11.75%, Distortion: 2.09%
+Iteration 7, added result | Power: 11.35%, Distortion: 2.10%
+Iteration 8, added result | Power: 22.09%, Distortion: 3.67%
+Iteration 9, added result | Power: 24.51%, Distortion: 4.32%
+Iteration 10, added result | Power: 22.64%, Distortion: 3.88%
+
+[92mResults saved correctly in: simulation_results_basic.20260214_005126.csv[0m
+
+Best parameters:
+{'l_gamma': 1.0851722208197034, 'chroma_scale': 0.9525154194341828, 'brightness': -0.09018465406997792, 'contrast': -0.045474529739677874, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9056116212097108}
+Power saved: 30.46%
+Running basic_sim | variation=0.1 | repeat=2
+python3 lab2_1.py --type basic_sim --iteration 10 --variation 0.1
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iter 1: [92mNew best![0m Power: 21.18%, Distortion: 3.57%
+{'l_gamma': 1.022073456013373, 'chroma_scale': 0.9731275091476621, 'brightness': -0.0550889630476895, 'contrast': -0.04818842910413809, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9144237326975924}
+Iteration 2, added result | Power: 19.23%, Distortion: 3.25%
+Iteration 3, added result | Power: 11.71%, Distortion: 2.21%
+Iter 4: [92mNew best![0m Power: 23.54%, Distortion: 4.02%
+{'l_gamma': 1.0414919828495337, 'chroma_scale': 0.9791239941484395, 'brightness': -0.09117751668894282, 'contrast': -0.06979703941425072, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9890358535261295}
+Iter 5: [92mNew best![0m Power: 25.61%, Distortion: 4.33%
+{'l_gamma': 1.0313476879882677, 'chroma_scale': 0.9649816462830407, 'brightness': -0.0860961959635381, 'contrast': -0.03898167430434784, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9180384415186781}
+Iteration 6, added result | Power: 24.34%, Distortion: 4.15%
+Iteration 7, added result | Power: 20.23%, Distortion: 3.55%
+Iteration 8, added result | Power: 11.24%, Distortion: 1.96%
+Iteration 9, added result | Power: 21.28%, Distortion: 3.46%
+Iteration 10, added result | Power: 18.43%, Distortion: 3.34%
+
+[92mResults saved correctly in: simulation_results_basic.20260214_005753.csv[0m
+
+Best parameters:
+{'l_gamma': 1.0313476879882677, 'chroma_scale': 0.9649816462830407, 'brightness': -0.0860961959635381, 'contrast': -0.03898167430434784, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9180384415186781}
+Power saved: 25.61%
+Running basic_sim | variation=0.15 | repeat=1
+python3 lab2_1.py --type basic_sim --iteration 10 --variation 0.15
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iter 1: [92mNew best![0m Power: 35.01%, Distortion: 6.07%
+{'l_gamma': 1.0030893687859297, 'chroma_scale': 0.9504418613313023, 'brightness': -0.09192775602448267, 'contrast': -0.13534413296869172, 'blue_reduction': 0, 'luminance_reduction_factor': 0.8755529352921948}
+Iteration 2, added result | Power: 27.58%, Distortion: 4.60%
+Iteration 3, added result | Power: 29.82%, Distortion: 5.02%
+Iter 4: [92mNew best![0m Power: 39.98%, Distortion: 6.69%
+{'l_gamma': 1.1458422592059532, 'chroma_scale': 0.9217884970985559, 'brightness': -0.1481998987571718, 'contrast': -0.06116688565091509, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9457164267214979}
+Iteration 5, added result | Power: 26.39%, Distortion: 4.55%
+Iteration 6, added result | Power: 34.51%, Distortion: 6.05%
+Iter 7: [92mNew best![0m Power: 40.94%, Distortion: 6.98%
+{'l_gamma': 1.1137757880334649, 'chroma_scale': 0.8606465174418393, 'brightness': -0.13827225179109975, 'contrast': -0.031147673621258753, 'blue_reduction': 0, 'luminance_reduction_factor': 0.8708083012934892}
+Iteration 8, added result | Power: 19.23%, Distortion: 3.31%
+Iteration 9, added result | Power: 20.29%, Distortion: 3.57%
+Iteration 10, added result | Power: 26.17%, Distortion: 4.37%
+
+[92mResults saved correctly in: simulation_results_basic.20260214_010415.csv[0m
+
+Best parameters:
+{'l_gamma': 1.1137757880334649, 'chroma_scale': 0.8606465174418393, 'brightness': -0.13827225179109975, 'contrast': -0.031147673621258753, 'blue_reduction': 0, 'luminance_reduction_factor': 0.8708083012934892}
+Power saved: 40.94%
+Running basic_sim | variation=0.15 | repeat=2
+python3 lab2_1.py --type basic_sim --iteration 10 --variation 0.15
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iter 1: [92mNew best![0m Power: 27.47%, Distortion: 4.55%
+{'l_gamma': 1.0640864292026921, 'chroma_scale': 0.9849665101206091, 'brightness': -0.09462277573040762, 'contrast': -0.04533422046637761, 'blue_reduction': 0, 'luminance_reduction_factor': 0.940627025768753}
+Iteration 2, added result | Power: 25.14%, Distortion: 4.45%
+Iter 3: [92mNew best![0m Power: 27.87%, Distortion: 4.91%
+{'l_gamma': 1.1215775340006513, 'chroma_scale': 0.8841627852320217, 'brightness': -0.04243910519583348, 'contrast': -0.12160582900268092, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9179638837239379}
+Iteration 4, added result | Power: 9.14%, Distortion: 1.48%
+Iter 5: [92mNew best![0m Power: 43.94%, Distortion: 7.46%
+{'l_gamma': 1.134492576343778, 'chroma_scale': 0.8759235844639616, 'brightness': -0.13407901964474178, 'contrast': -0.07337559490071076, 'blue_reduction': 0, 'luminance_reduction_factor': 0.8713140588517877}
+Iteration 6, added result | Power: 32.04%, Distortion: 5.40%
+Iteration 7, added result | Power: 17.39%, Distortion: 3.12%
+Iteration 8, added result | Power: 23.21%, Distortion: 4.01%
+Iteration 9, added result | Power: 23.90%, Distortion: 3.94%
+Iteration 10, added result | Power: 36.99%, Distortion: 6.39%
+
+[92mResults saved correctly in: simulation_results_basic.20260214_011040.csv[0m
+
+Best parameters:
+{'l_gamma': 1.134492576343778, 'chroma_scale': 0.8759235844639616, 'brightness': -0.13407901964474178, 'contrast': -0.07337559490071076, 'blue_reduction': 0, 'luminance_reduction_factor': 0.8713140588517877}
+Power saved: 43.94%
+Running basic_sim | variation=0.20 | repeat=1
+python3 lab2_1.py --type basic_sim --iteration 10 --variation 0.20
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iter 1: [92mNew best![0m Power: 41.30%, Distortion: 6.85%
+{'l_gamma': 1.118388415749133, 'chroma_scale': 0.9884762436765682, 'brightness': -0.17132956654482057, 'contrast': -0.10198122304973987, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9960513385132124}
+Iteration 2, added result | Power: 37.66%, Distortion: 6.43%
+Iteration 3, added result | Power: 22.28%, Distortion: 3.66%
+Iter 4: [92mNew best![0m Power: 41.40%, Distortion: 7.15%
+{'l_gamma': 1.1883379610241418, 'chroma_scale': 0.8729301956941613, 'brightness': -0.07637120157620927, 'contrast': -0.18296258733096793, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9031361644914038}
+Iteration 5, added result | Power: 14.70%, Distortion: 2.81%
+Iteration 6, added result | Power: 31.62%, Distortion: 5.63%
+Iteration 7, added result | Power: 31.99%, Distortion: 5.66%
+Iteration 8, added result | Power: 28.73%, Distortion: 4.78%
+Iteration 9, added result | Power: 26.99%, Distortion: 4.88%
+Iteration 10, added result | Power: 23.22%, Distortion: 4.33%
+
+[92mResults saved correctly in: simulation_results_basic.20260214_011710.csv[0m
+
+Best parameters:
+{'l_gamma': 1.1883379610241418, 'chroma_scale': 0.8729301956941613, 'brightness': -0.07637120157620927, 'contrast': -0.18296258733096793, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9031361644914038}
+Power saved: 41.40%
+Running basic_sim | variation=0.20 | repeat=2
+python3 lab2_1.py --type basic_sim --iteration 10 --variation 0.20
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iter 1: [92mNew best![0m Power: 33.73%, Distortion: 5.69%
+{'l_gamma': 1.0913498772906967, 'chroma_scale': 0.9530387269484677, 'brightness': -0.12558528324956914, 'contrast': -0.08756843164761346, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9748895085077063}
+Iter 2: [92mNew best![0m Power: 39.27%, Distortion: 6.94%
+{'l_gamma': 1.0931234926523299, 'chroma_scale': 0.8651668911520745, 'brightness': -0.08678505008370432, 'contrast': -0.1921627509747718, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9114493100012417}
+Iteration 3, added result | Power: 18.70%, Distortion: 3.45%
+Iteration 4, added result | Power: 22.90%, Distortion: 4.00%
+Iter 5: [92mNew best![0m Power: 40.89%, Distortion: 6.79%
+{'l_gamma': 1.147408065544333, 'chroma_scale': 0.9117386650231843, 'brightness': -0.1404635727278723, 'contrast': -0.016386734007285936, 'blue_reduction': 0, 'luminance_reduction_factor': 0.8857701168749951}
+Iteration 6, added result | Power: 29.44%, Distortion: 5.29%
+Iter 7: [92mNew best![0m Power: 45.90%, Distortion: 7.77%
+{'l_gamma': 1.070414746937307, 'chroma_scale': 0.952501607284954, 'brightness': -0.1772358849036025, 'contrast': -0.1503486763876435, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9670692989791375}
+Iteration 8, added result | Power: 35.24%, Distortion: 6.22%
+Iteration 9, added result | Power: 22.91%, Distortion: 3.91%
+Iteration 10, added result | Power: 31.17%, Distortion: 5.58%
+
+[92mResults saved correctly in: simulation_results_basic.20260214_012333.csv[0m
+
+Best parameters:
+{'l_gamma': 1.070414746937307, 'chroma_scale': 0.952501607284954, 'brightness': -0.1772358849036025, 'contrast': -0.1503486763876435, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9670692989791375}
+Power saved: 45.90%
+===== DVS SIMULATIONS =====
+Running dvs_sim | variation=0.05 | newvdd=14 | repeat=1
+python3 lab2_1.py --type dvs_sim --iteration 10 --variation 0.05 --newvdd 14
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iter 1: [92mNew best![0m Power: 4.75%, Distortion: 0.78%
+{'l_gamma': 1.0330734967627915, 'chroma_scale': 0.9893184301184513, 'brightness': 0.008554298110910283, 'contrast': -0.002834896916575437, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9711120386560365}
+Iteration 2, no results | Power: -1.05%, Distortion: 0.89%
+Iter 3: [92mNew best![0m Power: 11.53%, Distortion: 1.88%
+{'l_gamma': 0.9666212367340558, 'chroma_scale': 1.0361343936482872, 'brightness': -0.034189956560586404, 'contrast': -0.04572822860780421, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9621196039423173}
+Iteration 4, added result | Power: 9.91%, Distortion: 1.70%
+Iteration 5, added result | Power: 0.38%, Distortion: 0.75%
+Iteration 6, added result | Power: 2.78%, Distortion: 0.57%
+Iteration 7, added result | Power: 7.49%, Distortion: 1.41%
+Iteration 8, no results | Power: -6.76%, Distortion: 1.54%
+Iteration 9, added result | Power: 10.18%, Distortion: 1.51%
+Iteration 10, no results | Power: -2.60%, Distortion: 1.03%
+
+[92mResults saved correctly in: simulation_results_dvs14.20260214_020333.csv[0m
+
+Best parameters:
+{'l_gamma': 0.9666212367340558, 'chroma_scale': 1.0361343936482872, 'brightness': -0.034189956560586404, 'contrast': -0.04572822860780421, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9621196039423173}
+Power saved: 11.53%
+Running dvs_sim | variation=0.05 | newvdd=14 | repeat=2
+python3 lab2_1.py --type dvs_sim --iteration 10 --variation 0.05 --newvdd 14
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iter 1: [92mNew best![0m Power: 1.84%, Distortion: 0.56%
+{'l_gamma': 1.0162232224459202, 'chroma_scale': 1.0304911401040107, 'brightness': -0.011460955142140052, 'contrast': 0.013518900287407515, 'blue_reduction': 0, 'luminance_reduction_factor': 1.0295570305209094}
+Iter 2: [92mNew best![0m Power: 2.56%, Distortion: 0.51%
+{'l_gamma': 1.0383498241114872, 'chroma_scale': 0.9585643962245661, 'brightness': 0.000780388532988098, 'contrast': 0.041639509877600664, 'blue_reduction': 0, 'luminance_reduction_factor': 0.978626621932676}
+Iter 3: [92mNew best![0m Power: 6.37%, Distortion: 1.38%
+{'l_gamma': 0.95062989302232, 'chroma_scale': 0.9602136847203507, 'brightness': -0.02346897010184388, 'contrast': -0.04852495279902689, 'blue_reduction': 0, 'luminance_reduction_factor': 0.991400886472391}
+Iter 4: [92mNew best![0m Power: 13.97%, Distortion: 2.35%
+{'l_gamma': 1.0455787323386214, 'chroma_scale': 0.9556777966882483, 'brightness': -0.03987082229031507, 'contrast': -0.007949326593838138, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9546752611706905}
+Iteration 5, no results | Power: -2.08%, Distortion: 0.69%
+Iteration 6, added result | Power: 4.96%, Distortion: 0.86%
+Iteration 7, no results | Power: -0.40%, Distortion: 0.72%
+Iteration 8, added result | Power: 2.59%, Distortion: 0.57%
+Iteration 9, no results | Power: -1.61%, Distortion: 0.87%
+Iteration 10, added result | Power: 7.06%, Distortion: 1.12%
+
+[92mResults saved correctly in: simulation_results_dvs14.20260214_024316.csv[0m
+
+Best parameters:
+{'l_gamma': 1.0455787323386214, 'chroma_scale': 0.9556777966882483, 'brightness': -0.03987082229031507, 'contrast': -0.007949326593838138, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9546752611706905}
+Power saved: 13.97%
+Running dvs_sim | variation=0.05 | newvdd=13 | repeat=1
+python3 lab2_1.py --type dvs_sim --iteration 10 --variation 0.05 --newvdd 13
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iter 1: [92mNew best![0m Power: 10.02%, Distortion: 1.84%
+{'l_gamma': 1.0291304834820727, 'chroma_scale': 1.008702570013421, 'brightness': -0.049967971715358384, 'contrast': 0.02368493464088131, 'blue_reduction': 0, 'luminance_reduction_factor': 1.0149154991122538}
+Iteration 2, no results | Power: -1.15%, Distortion: 1.82%
+Iteration 3, no results | Power: -2.99%, Distortion: 2.00%
+Iteration 4, no results | Power: -0.08%, Distortion: 1.72%
+Iteration 5, added result | Power: 6.69%, Distortion: 1.36%
+Iteration 6, added result | Power: 1.45%, Distortion: 1.34%
+Iteration 7, added result | Power: 7.85%, Distortion: 1.43%
+Iter 8: [92mNew best![0m Power: 10.85%, Distortion: 2.06%
+{'l_gamma': 0.967551551431312, 'chroma_scale': 0.9943274470516098, 'brightness': -0.04815683031550066, 'contrast': -0.02531510167120701, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9947511572420235}
+Iteration 9, no results | Power: -1.41%, Distortion: 1.62%
+Iteration 10, added result | Power: 2.10%, Distortion: 1.07%
+
+[92mResults saved correctly in: simulation_results_dvs13.20260214_032319.csv[0m
+
+Best parameters:
+{'l_gamma': 0.967551551431312, 'chroma_scale': 0.9943274470516098, 'brightness': -0.04815683031550066, 'contrast': -0.02531510167120701, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9947511572420235}
+Power saved: 10.85%
+Running dvs_sim | variation=0.05 | newvdd=13 | repeat=2
+python3 lab2_1.py --type dvs_sim --iteration 10 --variation 0.05 --newvdd 13
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iteration 1, no results | Power: -4.37%, Distortion: 2.18%
+Iter 2: [92mNew best![0m Power: 3.27%, Distortion: 1.16%
+{'l_gamma': 1.0190300796905982, 'chroma_scale': 0.9684043240757493, 'brightness': 0.04172144673581833, 'contrast': -0.03479510196794591, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9571936602889564}
+Iteration 3, no results | Power: -0.12%, Distortion: 1.48%
+Iteration 4, added result | Power: 2.68%, Distortion: 1.33%
+Iteration 5, no results | Power: -1.40%, Distortion: 1.88%
+Iteration 6, no results | Power: -1.84%, Distortion: 1.69%
+Iteration 7, added result | Power: 1.18%, Distortion: 1.29%
+Iter 8: [92mNew best![0m Power: 11.50%, Distortion: 1.95%
+{'l_gamma': 1.0115169798539791, 'chroma_scale': 1.0053281229870588, 'brightness': -0.029149480229827197, 'contrast': 0.0011053468917494175, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9566188224902225}
+Iteration 9, no results | Power: -4.61%, Distortion: 2.22%
+Iteration 10, no results | Power: -1.31%, Distortion: 1.74%
+
+[92mResults saved correctly in: simulation_results_dvs13.20260214_040319.csv[0m
+
+Best parameters:
+{'l_gamma': 1.0115169798539791, 'chroma_scale': 1.0053281229870588, 'brightness': -0.029149480229827197, 'contrast': 0.0011053468917494175, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9566188224902225}
+Power saved: 11.50%
+Running dvs_sim | variation=0.05 | newvdd=12 | repeat=1
+python3 lab2_1.py --type dvs_sim --iteration 10 --variation 0.05 --newvdd 12
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iter 1: [92mNew best![0m Power: 10.83%, Distortion: 2.35%
+{'l_gamma': 1.0103100953405966, 'chroma_scale': 1.0146213060462774, 'brightness': -0.006017062911297652, 'contrast': -0.02313394943721904, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9849437402094168}
+Iteration 2, no results | Power: -2.19%, Distortion: 3.65%
+Iter 3: [92mNew best![0m Power: 15.65%, Distortion: 3.02%
+{'l_gamma': 1.0349575529235648, 'chroma_scale': 0.9873614793565892, 'brightness': -0.038723440802596244, 'contrast': 0.00154613191702032, 'blue_reduction': 0, 'luminance_reduction_factor': 0.970138631087416}
+Iteration 4, added result | Power: 9.18%, Distortion: 2.18%
+Iteration 5, added result | Power: 7.62%, Distortion: 2.25%
+Iteration 6, added result | Power: 7.76%, Distortion: 2.11%
+Iteration 7, added result | Power: 8.09%, Distortion: 2.32%
+Iteration 8, added result | Power: 6.54%, Distortion: 2.34%
+Iteration 9, added result | Power: 8.60%, Distortion: 2.17%
+Iteration 10, added result | Power: 7.28%, Distortion: 2.19%
+
+[92mResults saved correctly in: simulation_results_dvs12.20260214_044310.csv[0m
+
+Best parameters:
+{'l_gamma': 1.0349575529235648, 'chroma_scale': 0.9873614793565892, 'brightness': -0.038723440802596244, 'contrast': 0.00154613191702032, 'blue_reduction': 0, 'luminance_reduction_factor': 0.970138631087416}
+Power saved: 15.65%
+Running dvs_sim | variation=0.05 | newvdd=12 | repeat=2
+python3 lab2_1.py --type dvs_sim --iteration 10 --variation 0.05 --newvdd 12
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iter 1: [92mNew best![0m Power: 7.55%, Distortion: 2.11%
+{'l_gamma': 1.0247309753593508, 'chroma_scale': 1.0430917430137265, 'brightness': 0.008178491107549778, 'contrast': -0.04053006384123573, 'blue_reduction': 0, 'luminance_reduction_factor': 1.046677188527164}
+Iteration 2, added result | Power: 4.79%, Distortion: 2.40%
+Iter 3: [92mNew best![0m Power: 11.04%, Distortion: 2.50%
+{'l_gamma': 1.0372190092647988, 'chroma_scale': 1.0467695779655979, 'brightness': -0.03796237977623393, 'contrast': 0.02603733291805016, 'blue_reduction': 0, 'luminance_reduction_factor': 1.0437665976345327}
+Iteration 4, added result | Power: 5.12%, Distortion: 2.30%
+Iteration 5, added result | Power: 2.90%, Distortion: 2.61%
+Iteration 6, added result | Power: 9.86%, Distortion: 2.25%
+Iteration 7, added result | Power: 10.21%, Distortion: 2.25%
+Iteration 8, added result | Power: 5.54%, Distortion: 2.27%
+Iter 9: [92mNew best![0m Power: 14.21%, Distortion: 2.77%
+{'l_gamma': 0.979237071762121, 'chroma_scale': 1.0269301092123702, 'brightness': -0.04978722381818238, 'contrast': 0.033458750838292015, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9550272901486561}
+Iteration 10, added result | Power: 3.26%, Distortion: 2.75%
+
+[92mResults saved correctly in: simulation_results_dvs12.20260214_052302.csv[0m
+
+Best parameters:
+{'l_gamma': 0.979237071762121, 'chroma_scale': 1.0269301092123702, 'brightness': -0.04978722381818238, 'contrast': 0.033458750838292015, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9550272901486561}
+Power saved: 14.21%
+Running dvs_sim | variation=0.1 | newvdd=14 | repeat=1
+python3 lab2_1.py --type dvs_sim --iteration 10 --variation 0.1 --newvdd 14
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iter 1: [92mNew best![0m Power: 0.19%, Distortion: 1.21%
+{'l_gamma': 1.0975685901357928, 'chroma_scale': 0.9482162035391989, 'brightness': -0.03045501787875622, 'contrast': 0.06824360592797693, 'blue_reduction': 0, 'luminance_reduction_factor': 1.090503515524352}
+Iteration 2, no results | Power: -4.37%, Distortion: 1.62%
+Iteration 3, no results | Power: -0.17%, Distortion: 0.96%
+Iter 4: [92mNew best![0m Power: 5.05%, Distortion: 0.96%
+{'l_gamma': 0.9309989325585004, 'chroma_scale': 1.0266129031350053, 'brightness': -0.08049596866205311, 'contrast': 0.05501766903053598, 'blue_reduction': 0, 'luminance_reduction_factor': 1.0223768138953933}
+Iter 5: [92mNew best![0m Power: 17.24%, Distortion: 2.87%
+{'l_gamma': 1.0370584924601784, 'chroma_scale': 0.9402180238677185, 'brightness': -0.08447048917271116, 'contrast': 0.07670488308995882, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9240069449417513}
+Iteration 6, no results | Power: -15.20%, Distortion: 3.07%
+Iteration 7, added result | Power: 15.22%, Distortion: 2.31%
+Iteration 8, added result | Power: 11.41%, Distortion: 2.42%
+Iteration 9, added result | Power: 8.82%, Distortion: 1.56%
+Iteration 10, no results | Power: -5.01%, Distortion: 1.33%
+
+[92mResults saved correctly in: simulation_results_dvs14.20260214_060256.csv[0m
+
+Best parameters:
+{'l_gamma': 1.0370584924601784, 'chroma_scale': 0.9402180238677185, 'brightness': -0.08447048917271116, 'contrast': 0.07670488308995882, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9240069449417513}
+Power saved: 17.24%
+Running dvs_sim | variation=0.1 | newvdd=14 | repeat=2
+python3 lab2_1.py --type dvs_sim --iteration 10 --variation 0.1 --newvdd 14
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iter 1: [92mNew best![0m Power: 7.94%, Distortion: 1.23%
+{'l_gamma': 1.0239827957457128, 'chroma_scale': 1.0750982300886547, 'brightness': -0.017202058953613084, 'contrast': 0.045818283878336696, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9433671815701501}
+Iteration 2, added result | Power: 3.31%, Distortion: 0.82%
+Iter 3: [92mNew best![0m Power: 8.01%, Distortion: 1.29%
+{'l_gamma': 1.028796623755209, 'chroma_scale': 1.0674663397625395, 'brightness': 0.006314154422837337, 'contrast': 0.02062854458151582, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9191948489325872}
+Iteration 4, added result | Power: 3.41%, Distortion: 0.80%
+Iter 5: [92mNew best![0m Power: 8.59%, Distortion: 1.66%
+{'l_gamma': 1.0297808666546833, 'chroma_scale': 0.957508386595625, 'brightness': -0.0578749596837052, 'contrast': -0.0037504790240633634, 'blue_reduction': 0, 'luminance_reduction_factor': 1.0477341720158204}
+Iteration 6, added result | Power: 2.64%, Distortion: 0.64%
+Iteration 7, no results | Power: -1.55%, Distortion: 1.01%
+Iteration 8, added result | Power: 4.05%, Distortion: 1.17%
+Iteration 9, added result | Power: 3.74%, Distortion: 0.94%
+Iter 10: [92mNew best![0m Power: 8.80%, Distortion: 1.40%
+{'l_gamma': 1.0679236684826945, 'chroma_scale': 0.9823942399763005, 'brightness': 0.022330425620205957, 'contrast': 0.008044093643482325, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9055897928312946}
+
+[92mResults saved correctly in: simulation_results_dvs14.20260214_064248.csv[0m
+
+Best parameters:
+{'l_gamma': 1.0679236684826945, 'chroma_scale': 0.9823942399763005, 'brightness': 0.022330425620205957, 'contrast': 0.008044093643482325, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9055897928312946}
+Power saved: 8.80%
+Running dvs_sim | variation=0.1 | newvdd=13 | repeat=1
+python3 lab2_1.py --type dvs_sim --iteration 10 --variation 0.1 --newvdd 13
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iter 1: [92mNew best![0m Power: 9.83%, Distortion: 2.10%
+{'l_gamma': 0.9917108994034173, 'chroma_scale': 0.9824652446690438, 'brightness': -0.045227304538195304, 'contrast': -0.07871689340318139, 'blue_reduction': 0, 'luminance_reduction_factor': 1.071857353162499}
+Iteration 2, added result | Power: 5.32%, Distortion: 1.51%
+Iteration 3, no results | Power: -6.30%, Distortion: 2.32%
+Iteration 4, added result | Power: 0.56%, Distortion: 1.80%
+Iteration 5, no results | Power: -4.10%, Distortion: 1.84%
+Iteration 6, no results | Power: -9.90%, Distortion: 3.02%
+Iteration 7, added result | Power: 3.93%, Distortion: 1.10%
+Iteration 8, no results | Power: -0.05%, Distortion: 2.18%
+Iteration 9, no results | Power: -1.64%, Distortion: 1.69%
+Iter 10: [92mNew best![0m Power: 22.41%, Distortion: 4.05%
+{'l_gamma': 1.0139109908108477, 'chroma_scale': 0.9255971295195613, 'brightness': -0.08881555149004548, 'contrast': -0.06231880627510518, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9764151008825164}
+
+[92mResults saved correctly in: simulation_results_dvs13.20260214_072331.csv[0m
+
+Best parameters:
+{'l_gamma': 1.0139109908108477, 'chroma_scale': 0.9255971295195613, 'brightness': -0.08881555149004548, 'contrast': -0.06231880627510518, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9764151008825164}
+Power saved: 22.41%
+Running dvs_sim | variation=0.1 | newvdd=13 | repeat=2
+python3 lab2_1.py --type dvs_sim --iteration 10 --variation 0.1 --newvdd 13
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iteration 1, no results | Power: -2.10%, Distortion: 1.68%
+Iter 2: [92mNew best![0m Power: 14.45%, Distortion: 2.80%
+{'l_gamma': 1.0363396528546753, 'chroma_scale': 0.9282328270404032, 'brightness': -0.037259595204010745, 'contrast': -0.08706582746609162, 'blue_reduction': 0, 'luminance_reduction_factor': 1.0168294451028221}
+Iter 3: [92mNew best![0m Power: 16.60%, Distortion: 2.63%
+{'l_gamma': 1.0276988455641958, 'chroma_scale': 1.0884756309619534, 'brightness': -0.03901647413549961, 'contrast': -0.05661295236302377, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9734107589907216}
+Iteration 4, no results | Power: -8.57%, Distortion: 2.73%
+Iteration 5, no results | Power: -1.45%, Distortion: 1.64%
+Iteration 6, added result | Power: 0.53%, Distortion: 1.55%
+Iteration 7, no results | Power: -13.73%, Distortion: 4.14%
+Iteration 8, added result | Power: 1.51%, Distortion: 1.84%
+Iteration 9, added result | Power: 8.93%, Distortion: 1.86%
+Iter 10: [92mNew best![0m Power: 21.20%, Distortion: 3.48%
+{'l_gamma': 1.0241417399562969, 'chroma_scale': 1.0105697274616894, 'brightness': -0.044077880177797284, 'contrast': -0.05641045614331402, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9094205499587885}
+
+[92mResults saved correctly in: simulation_results_dvs13.20260214_080403.csv[0m
+
+Best parameters:
+{'l_gamma': 1.0241417399562969, 'chroma_scale': 1.0105697274616894, 'brightness': -0.044077880177797284, 'contrast': -0.05641045614331402, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9094205499587885}
+Power saved: 21.20%
+Running dvs_sim | variation=0.1 | newvdd=12 | repeat=1
+python3 lab2_1.py --type dvs_sim --iteration 10 --variation 0.1 --newvdd 12
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iteration 1, no results | Power: -3.13%, Distortion: 3.62%
+Iteration 2, no results | Power: -2.34%, Distortion: 3.74%
+Iter 3: [92mNew best![0m Power: 14.05%, Distortion: 3.02%
+{'l_gamma': 1.0920053763070336, 'chroma_scale': 0.9724996004875699, 'brightness': -0.02140186988784347, 'contrast': -0.07639079387112885, 'blue_reduction': 0, 'luminance_reduction_factor': 1.0654389584682835}
+Iteration 4, added result | Power: 5.00%, Distortion: 2.58%
+Iteration 5, added result | Power: 12.07%, Distortion: 2.88%
+Iteration 6, added result | Power: 5.81%, Distortion: 2.48%
+Iteration 7, added result | Power: 12.91%, Distortion: 3.28%
+Iter 8: [92mNew best![0m Power: 14.73%, Distortion: 3.29%
+{'l_gamma': 0.948158976938126, 'chroma_scale': 0.9796834400298493, 'brightness': -0.07941530709289901, 'contrast': -0.05128615176173801, 'blue_reduction': 0, 'luminance_reduction_factor': 1.055126426789444}
+Iteration 9, no results | Power: -6.78%, Distortion: 4.38%
+Iteration 10, added result | Power: 9.31%, Distortion: 2.35%
+
+[92mResults saved correctly in: simulation_results_dvs12.20260214_084348.csv[0m
+
+Best parameters:
+{'l_gamma': 0.948158976938126, 'chroma_scale': 0.9796834400298493, 'brightness': -0.07941530709289901, 'contrast': -0.05128615176173801, 'blue_reduction': 0, 'luminance_reduction_factor': 1.055126426789444}
+Power saved: 14.73%
+Running dvs_sim | variation=0.1 | newvdd=12 | repeat=2
+python3 lab2_1.py --type dvs_sim --iteration 10 --variation 0.1 --newvdd 12
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iteration 1, no results | Power: -0.51%, Distortion: 3.51%
+Iteration 2, no results | Power: -4.32%, Distortion: 4.15%
+Iter 3: [92mNew best![0m Power: 18.21%, Distortion: 3.71%
+{'l_gamma': 0.9735720137743104, 'chroma_scale': 0.9811649059023324, 'brightness': -0.08780900913169368, 'contrast': -0.07868987003247363, 'blue_reduction': 0, 'luminance_reduction_factor': 1.0606101248413955}
+Iteration 4, no results | Power: -2.13%, Distortion: 3.54%
+Iteration 5, added result | Power: 8.12%, Distortion: 2.32%
+Iteration 6, no results | Power: -2.39%, Distortion: 3.82%
+Iter 7: [92mNew best![0m Power: 21.04%, Distortion: 3.73%
+{'l_gamma': 1.0642992904140474, 'chroma_scale': 1.085578841076109, 'brightness': -0.08311353531607411, 'contrast': -0.05064290438111714, 'blue_reduction': 0, 'luminance_reduction_factor': 1.0564564011130053}
+Iteration 8, added result | Power: 4.54%, Distortion: 2.52%
+Iteration 9, added result | Power: 1.43%, Distortion: 3.07%
+Iteration 10, added result | Power: 16.79%, Distortion: 3.33%
+
+[92mResults saved correctly in: simulation_results_dvs12.20260214_092356.csv[0m
+
+Best parameters:
+{'l_gamma': 1.0642992904140474, 'chroma_scale': 1.085578841076109, 'brightness': -0.08311353531607411, 'contrast': -0.05064290438111714, 'blue_reduction': 0, 'luminance_reduction_factor': 1.0564564011130053}
+Power saved: 21.04%
+Running dvs_sim | variation=0.15 | newvdd=14 | repeat=1
+python3 lab2_1.py --type dvs_sim --iteration 10 --variation 0.15 --newvdd 14
+Loading tiff images...
+Loading png images...
+Loading jpg images...
+Loaded: 48 image
+Iter 1: [92mNew best![0m Power: 5.23%, Distortion: 1.32%
+{'l_gamma': 0.9699323130757662, 'chroma_scale': 0.8993731605020646, 'brightness': 0.035144647901175274, 'contrast': -0.017212025451420532, 'blue_reduction': 0, 'luminance_reduction_factor': 0.8603795442245601}
+Iteration 2, added result | Power: 4.23%, Distortion: 0.86%
+Iter 3: [92mNew best![0m Power: 9.37%, Distortion: 1.54%
+{'l_gamma': 1.0342339434342087, 'chroma_scale': 1.1416826189505744, 'brightness': -0.0641918546690708, 'contrast': 0.13748397503665402, 'blue_reduction': 0, 'luminance_reduction_factor': 0.9564377911973576}
+Iteration 4, added result | Power: 5.58%, Distortion: 1.28%
+Iteration 5, no results | Power: -14.89%, Distortion: 3.05%
+Iter 6: [92mNew best![0m Power: 9.83%, Distortion: 1.79%
+{'l_gamma': 0.9707931399774992, 'chroma_scale': 1.0100187390589637, 'brightness': -0.09422462190171574, 'contrast': 0.0028316030107157497, 'blue_reduction': 0, 'luminance_reduction_factor': 1.0607067693643426}
+Iteration 7, no results | Power: -4.71%, Distortion: 1.46%
+Iteration 8, added result | Power: 5.69%, Distortion: 1.41%
+Iteration 9, no results | Power: -24.26%, Distortion: 4.58%
