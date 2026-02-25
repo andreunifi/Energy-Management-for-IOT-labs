@@ -57,6 +57,8 @@ dkms.conf
 # Installation folder of systemC
 lab3/systemC/systemC/systemc-2.3.3/*
 lab3/systemC/systemCams/systemc-ams-2.3/*
+lab3/simulator/bin/run.x
+lab3/simulator/sim_trace.txt
 
 # debug information files
 *.dwo
