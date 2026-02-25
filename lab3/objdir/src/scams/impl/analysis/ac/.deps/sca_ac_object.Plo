@@ -1,0 +1,6 @@
+sca_ac_object.lo: \
+ ../../../../../../systemC/systemCams/systemc-ams-2.3/src/scams/impl/analysis/ac/sca_ac_object.cpp \
+ /usr/include/stdc-predef.h \
+ ../../../../../../systemC/systemCams/systemc-ams-2.3/src/scams/analysis/ac/sca_ac_object.h
+/usr/include/stdc-predef.h:
+../../../../../../systemC/systemCams/systemc-ams-2.3/src/scams/analysis/ac/sca_ac_object.h:

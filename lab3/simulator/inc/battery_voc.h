@@ -2,14 +2,17 @@
 
 #include "config.h"
 
-#define A_Voc 2.459294
-#define B_Voc -3.8721552
-#define C_Voc 2.548287
-#define D_Voc 3.066423
+#define A_Voc -42.77304451
+#define B_Voc 147.03333309
+#define C_Voc -198.82836987
+#define D_Voc 134.07477623
+#define E_Voc -46.60518529
+#define F_Voc 8.35505624
+#define G_Voc 2.8747398
 
-#define module_R 0.000076
-#define exp_R -1.867435
-#define bias_R 0.000049
+#define module_R 0.00761749 
+#define exp_R -1.86746127
+#define bias_R 0.00493609
 
 SCA_TDF_MODULE(battery_voc)
 {

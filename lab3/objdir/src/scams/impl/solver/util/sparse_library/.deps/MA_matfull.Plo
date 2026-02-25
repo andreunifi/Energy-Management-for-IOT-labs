@@ -1,0 +1,8 @@
+MA_matfull.lo: \
+ ../../../../../../../systemC/systemCams/systemc-ams-2.3/src/scams/impl/solver/util/sparse_library/MA_matfull.c \
+ /usr/include/stdc-predef.h \
+ ../../../../../../../systemC/systemCams/systemc-ams-2.3/src/scams/impl/solver/util/sparse_library/ma_util.h \
+ ../../../../../../../systemC/systemCams/systemc-ams-2.3/src/scams/impl/solver/util/sparse_library/ma_typedef.h
+/usr/include/stdc-predef.h:
+../../../../../../../systemC/systemCams/systemc-ams-2.3/src/scams/impl/solver/util/sparse_library/ma_util.h:
+../../../../../../../systemC/systemCams/systemc-ams-2.3/src/scams/impl/solver/util/sparse_library/ma_typedef.h:

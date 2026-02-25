@@ -3,7 +3,13 @@
 
 double battery_voc::getVoc(double soc)
 {
-   return A_Voc*(pow(soc,3)) + B_Voc*(pow(soc,2)) + C_Voc*soc + D_Voc; 
+    return A_Voc * pow(soc, 6) +
+    B_Voc * pow(soc, 5) +
+    C_Voc * pow(soc, 4) +
+    D_Voc * pow(soc, 3) +
+    E_Voc * pow(soc, 2) +
+    F_Voc * soc +
+    G_Voc;
 }
 
 double battery_voc::getR(double soc)
