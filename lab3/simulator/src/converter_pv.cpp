@@ -25,6 +25,8 @@ void converter_pv::processing()
 
     // Get efficiency
     eta = lut_eta.get_val(v_tmp) / 100;
+
+    eta = eta/100; // Convert percentage to fraction
     
     i_out.write(ideal_power * eta / VREF_BUS);
 }
