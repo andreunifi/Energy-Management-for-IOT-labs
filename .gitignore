@@ -59,6 +59,7 @@ lab3/systemC/systemC/systemc-2.3.3/*
 lab3/systemC/systemCams/systemc-ams-2.3/*
 lab3/simulator/bin/run.x
 lab3/simulator/sim_trace.txt
+lab3/simulator/scripts/*.json
 
 # debug information files
 *.dwo

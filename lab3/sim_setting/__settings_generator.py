@@ -1,20 +1,21 @@
 import json
 import copy
 import os
+import sys
+import argparse
 
-# Base configuration provided previously
 base_config = {
     "sim_step": 1,
     "sim_len": 7736400,
-    "period": 120, 
+    "period": 120,
     "vref_bus": 3.3,
     "soc_init": 1.0,
     "selfdisch_factor": 0.0,
     "sensors": [
-        {"name": "air_quality_sensor", "current_on": "48.2", "current_idle": "0.002", "activation_time": "0", "time_on": "30"},
-        {"name": "methane_sensor", "current_on": "18", "current_idle": "0.002", "activation_time": "0", "time_on": "30"},
-        {"name": "temperature_sensor", "current_on": "0.3", "current_idle": "0.002", "activation_time": "0", "time_on": "6"},
-        {"name": "mic_click_sensor", "current_on": "0.15", "current_idle": "0.002", "activation_time": "0", "time_on": "12"}
+        {"name": "air_quality_sensor",  "current_on": "48.2", "current_idle": "0.002", "activation_time": "0", "time_on": "30"},
+        {"name": "methane_sensor",       "current_on": "18",   "current_idle": "0.002", "activation_time": "0", "time_on": "30"},
+        {"name": "temperature_sensor",   "current_on": "0.3",  "current_idle": "0.002", "activation_time": "0", "time_on": "6"},
+        {"name": "mic_click_sensor",     "current_on": "0.15", "current_idle": "0.002", "activation_time": "0", "time_on": "12"}
     ],
     "mcu": {
         "states": [{"name": "ON", "current": "13", "time_on": "6"}],
@@ -26,43 +27,38 @@ base_config = {
     }
 }
 
-def generate_all_schedules():
-    os.makedirs('sim_setting', exist_ok=True)
-    period = base_config["period"]
+def validate_activation(sensor, act_time, period):
+    """Ensure sensor finishes within the period."""
+    time_on = int(sensor["time_on"])
+    if act_time + time_on > period:
+        print(f"ERROR: {sensor['name']} activation_time={act_time} + time_on={time_on} exceeds period={period}", file=sys.stderr)
+        sys.exit(1)
 
-    # 1. PARALLEL: All activate at time 0
-    parallel_config = copy.deepcopy(base_config)
-    for sensor in parallel_config['sensors']:
-        sensor['activation_time'] = "0"
-    
-    with open('sim_setting/parallel.json', 'w') as f:
-        json.dump(parallel_config, f, indent=4)
-    print("Generated: sim_setting/parallel.json")
+def generate_config(activation_times: list[int], index: int, output_dir: str) -> str:
+    os.makedirs(output_dir, exist_ok=True)
+    config = copy.deepcopy(base_config)
+    period = config["period"]
 
-    # 2. SEQUENTIAL: Back-to-back activation
-    seq_config = copy.deepcopy(base_config)
-    current_time_offset = 0
-    for sensor in seq_config['sensors']:
-        sensor['activation_time'] = str(current_time_offset)
-        current_time_offset += int(sensor['time_on'])
-        
-    with open('sim_setting/sequential.json', 'w') as f:
-        json.dump(seq_config, f, indent=4)
-    print("Generated: sim_setting/sequential.json")
+    for i, sensor in enumerate(config["sensors"]):
+        validate_activation(sensor, activation_times[i], period)
+        sensor["activation_time"] = str(activation_times[i])
 
-    # 3. MAXIMIZE EVERYTHING: All components ON for the entire period
-    max_config = copy.deepcopy(base_config)
-    for sensor in max_config['sensors']:
-        sensor['activation_time'] = "0"
-        sensor['time_on'] = str(period)
-    
-    # Also maximize MCU and RF
-    max_config['mcu']['states'][0]['time_on'] = str(period)
-    max_config['rf']['states'][0]['time_on'] = str(period)
+    filename = os.path.join(output_dir, f"config_{index:05d}.json")
+    with open(filename, "w") as f:
+        json.dump(config, f, indent=4)
 
-    with open('sim_setting/maximize_everything.json', 'w') as f:
-        json.dump(max_config, f, indent=4)
-    print("Generated: sim_setting/maximize_everything.json")
+    return filename
 
 if __name__ == "__main__":
-    generate_all_schedules()
+    parser = argparse.ArgumentParser(description="Generate a simulator config with given sensor activation times.")
+    parser.add_argument("--air",   type=int, required=True, help="activation_time for air_quality_sensor")
+    parser.add_argument("--meth",  type=int, required=True, help="activation_time for methane_sensor")
+    parser.add_argument("--temp",  type=int, required=True, help="activation_time for temperature_sensor")
+    parser.add_argument("--mic",   type=int, required=True, help="activation_time for mic_click_sensor")
+    parser.add_argument("--index", type=int, required=True, help="incremental config index (for filename)")
+    parser.add_argument("--outdir", type=str, default="sim_settings", help="output directory for config files")
+    args = parser.parse_args()
+
+    activation_times = [args.air, args.meth, args.temp, args.mic]
+    filename = generate_config(activation_times, args.index, args.outdir)
+    print(filename)  # shell script reads this
